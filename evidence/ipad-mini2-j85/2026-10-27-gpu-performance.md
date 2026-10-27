@@ -96,6 +96,9 @@ also compiled a shader and created a pipeline, but required Mesa's explicit
 experimental opt-in and emitted warnings about missing hardware workarounds.
 No job was submitted and no GPU executed either pipeline. Neither synthetic
 identity is a measured J85 identity; actual J85 compatibility remains unknown.
+A separate [public Fugu reference table](https://github.com/LineageOS/android_kernel_asus_fugu/blob/13030953e0359cce6a830b8e1a35954fe4399b73/drivers/staging/imgtec/rogue/hwdefs/km/rgx_bvnc_table_km.h#L99-L107)
+describes an older G6430 reference with different feature and errata values;
+it does not identify the J85 or establish compatible firmware.
 
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
