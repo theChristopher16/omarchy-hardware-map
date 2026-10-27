@@ -81,6 +81,13 @@ physical absence or GPU readiness. No corresponding hardware access occurred.
 A separate offline identity-selection trace found that multiple synthetic
 revision inputs collapse to the same derived diagnostic profile. The profile
 alone cannot distinguish those revisions; no physical GPU identity was read.
+A further unlinked observer candidate passed synthetic ownership, cancellation
+and private-close tests. Private close is not evidence of physical GPU power
+state, and provider lifetimes and real kernel linking remain unresolved. A
+separate private CPU firmware-staging candidate passed host sanitizer and
+fault tests using test-header shims; it does not publish to the device and
+has not been built against the target kernel. These candidates do not prove
+GPU address translation, firmware acceptance or an accelerated frame.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
