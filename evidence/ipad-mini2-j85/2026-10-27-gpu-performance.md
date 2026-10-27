@@ -131,5 +131,7 @@ A later source-pinned host harness checked how Mesa handles unsupported simulate
 
 A later read of the running kernel's device-tree metadata found the disabled GPU node has no clock or clock-name properties, and its ancestors have no clock-ranges property. The local PowerVR driver requires a core clock and passes its rate to firmware. This narrows the current binding gap; it does not exclude a separately registered clkdev mapping or measure the physical clock. No GPU register, power or clock change was made.
 
+A public-source review did not find a supported open-source firmware build for a verified J85 GPU identity. [TI's open-stack documentation](https://software-dl.ti.com/processor-sdk-linux/esd/AM62X/10_01_10_04/exports/docs/linux/Foundational_Components/Graphics/Rogue/Build_Guide.html#open-source-firmware) describes the firmware in that release as a closed-source binary. Linux checks device identity and firmware metadata; a different device's GPU name or firmware is not evidence of a J85 match. This review does not rule out every possible firmware source.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
