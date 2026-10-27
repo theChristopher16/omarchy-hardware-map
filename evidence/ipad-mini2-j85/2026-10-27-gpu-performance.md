@@ -45,6 +45,10 @@ Separately, a staging helper was corrected to reject a copy outside its
 caller-declared extent even when the allocation is larger. The updated helper
 passed 59 synthetic host tests and a refusal-only ARM64 kernel build; it has
 not been loaded on the iPad and does not prove GPU DMA or firmware operation.
+An isolated staging transaction additionally rejects partial images and
+currently refuses all publication; it passed synthetic concurrency and fault
+checks and a separate refusal-only build. Its changed context layout requires
+consumers to rebuild, and it is not a functioning firmware handoff.
 A separate resource-ownership observer passed synthetic lifecycle tests and an
 offline kernel build with readiness explicitly unsupported. Its complete
 module contains experimental controller code and was not loaded; continuous
