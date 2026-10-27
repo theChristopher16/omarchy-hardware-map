@@ -30,7 +30,9 @@ negative control showed that the absent-property path preserves pre-existing
 auxiliary changes. A further source emulation showed that the selected
 initializer clears both arrays before property lookup; a simulated provider
 side effect can still change them. Actual provider behavior and configuration
-remain unverified.
+remain unverified. Another offline source branch uses built-in fallback
+records when a configuration bit is set; the actual setting and whether
+that path applies to the iPad remain unverified.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated.
