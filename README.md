@@ -39,3 +39,5 @@ The Site MCP exposes search, the caller’s proposals, moderator queue and decis
 ## Metrics and privacy
 
 The moderator-only Metrics view and `get_site_metrics` MCP tool report catalog and moderation totals and daily counts of page loads, node selections, and source-link clicks. Traffic collection began when this feature was deployed; counts include repeated loads, owner testing, and automated clients, and are not unique visitors. The application stores daily totals without traffic cookies, IP addresses, search terms, or visitor identifiers, and honors Global Privacy Control and Do Not Track. Hosting may retain its own operational logs. Proposal counts include test records.
+
+Catalog growth counts approved new reports, edits, and removals by UTC approval date. Net change is approved creations minus approved removals; original starter reports and any direct database changes are not part of that change. A separate count identifies additions from accounts other than the current owner, based on the current owner role. Approval counts may include tests and do not establish distinct humans.

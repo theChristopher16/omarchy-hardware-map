@@ -4,6 +4,7 @@ export type SiteMetrics = {
   period:{days:number|null;from:string;through:string;timezone:string};
   traffic:{firstRecordedDay:string|null;pageViews:number|null;nodeSelections:number|null;sourceOpens:number|null;daily:{day:string;pageViews:number;nodeSelections:number;sourceOpens:number}[]};
   catalog:{publishedReports:number;deviceLabels:number;componentLabels:number;byOutcome:MetricRow[];byComponent:MetricRow[];byStage:MetricRow[]};
+  growth:{newReports:number;approvedEdits:number;approvedRemovals:number;netChange:number;nonOwnerNewReports:number;daily:{day:string;newReports:number;approvedEdits:number;approvedRemovals:number;nonOwnerNewReports:number}[]};
   moderation:{pending:number;approvedAllTime:number;rejectedAllTime:number;conflictAllTime:number;contributorsAllTime:number;submittedInPeriod:number;approvedInPeriod:number;rejectedInPeriod:number;conflictsInPeriod:number;oldestPendingAt:string|null};
   activeClaims:number;
 };
@@ -19,9 +20,16 @@ export async function getSiteMetrics(days:number|null):Promise<SiteMetrics>{
  db.prepare('SELECT COUNT(*) AS n FROM claims c JOIN reports r ON r.id=c.report_id WHERE c.expires_at>? AND r.archived_at IS NULL').bind(until).first<{n:number}>(),
  db.prepare('SELECT day,page_views AS pageViews,node_selections AS nodeSelections,source_opens AS sourceOpens FROM traffic_daily WHERE day>=? ORDER BY day DESC').bind(from).all<{day:string;pageViews:number;nodeSelections:number;sourceOpens:number}>(),
  db.prepare('SELECT MIN(day) AS firstRecordedDay FROM traffic_daily').first<{firstRecordedDay:string|null}>(),
+ db.prepare(`SELECT substr(p.reviewed_at,1,10) AS day,
+ SUM(CASE WHEN p.action='create' THEN 1 ELSE 0 END) AS newReports,
+ SUM(CASE WHEN p.action='edit' THEN 1 ELSE 0 END) AS approvedEdits,
+ SUM(CASE WHEN p.action='remove' THEN 1 ELSE 0 END) AS approvedRemovals,
+ SUM(CASE WHEN p.action='create' AND NOT EXISTS (SELECT 1 FROM moderators m WHERE m.id=p.author_id AND m.role='owner') THEN 1 ELSE 0 END) AS nonOwnerNewReports
+ FROM proposals p WHERE p.state='approved' AND p.reviewed_at>=? AND p.reviewed_at<=? GROUP BY substr(p.reviewed_at,1,10) ORDER BY day DESC`).bind(from+'T00:00:00.000Z',until).all<{day:string;newReports:number;approvedEdits:number;approvedRemovals:number;nonOwnerNewReports:number}>(),
  ]);
- const [catalog,outcomes,components,stages,moderation,claims,daily,first]=queries;
+ const [catalog,outcomes,components,stages,moderation,claims,daily,first,growthDaily]=queries;
  const rows=daily.results||[],firstDay=first?.firstRecordedDay??null,sum=(field:'pageViews'|'nodeSelections'|'sourceOpens')=>firstDay?rows.reduce((total,row)=>total+Number(row[field]),0):null;
  const n=(key:string)=>Number(moderation?.[key]??0);
- return {period:{days,from,through:until,timezone:'UTC'},traffic:{firstRecordedDay:firstDay,pageViews:sum('pageViews'),nodeSelections:sum('nodeSelections'),sourceOpens:sum('sourceOpens'),daily:rows},catalog:{publishedReports:catalog?.publishedReports??0,deviceLabels:catalog?.deviceLabels??0,componentLabels:catalog?.componentLabels??0,byOutcome:outcomes.results,byComponent:components.results,byStage:stages.results},moderation:{pending:n('pending'),approvedAllTime:n('approvedAllTime'),rejectedAllTime:n('rejectedAllTime'),conflictAllTime:n('conflictAllTime'),contributorsAllTime:n('contributorsAllTime'),submittedInPeriod:n('submittedInPeriod'),approvedInPeriod:n('approvedInPeriod'),rejectedInPeriod:n('rejectedInPeriod'),conflictsInPeriod:n('conflictsInPeriod'),oldestPendingAt:typeof moderation?.oldestPendingAt==='string'?moderation.oldestPendingAt:null},activeClaims:claims?.n??0};
+ const growthRows=growthDaily.results||[],growthSum=(key:'newReports'|'approvedEdits'|'approvedRemovals'|'nonOwnerNewReports')=>growthRows.reduce((total,row)=>total+Number(row[key]),0),newReports=growthSum('newReports'),approvedRemovals=growthSum('approvedRemovals');
+ return {period:{days,from,through:until,timezone:'UTC'},traffic:{firstRecordedDay:firstDay,pageViews:sum('pageViews'),nodeSelections:sum('nodeSelections'),sourceOpens:sum('sourceOpens'),daily:rows},catalog:{publishedReports:catalog?.publishedReports??0,deviceLabels:catalog?.deviceLabels??0,componentLabels:catalog?.componentLabels??0,byOutcome:outcomes.results,byComponent:components.results,byStage:stages.results},growth:{newReports,approvedEdits:growthSum('approvedEdits'),approvedRemovals,netChange:newReports-approvedRemovals,nonOwnerNewReports:growthSum('nonOwnerNewReports'),daily:growthRows},moderation:{pending:n('pending'),approvedAllTime:n('approvedAllTime'),rejectedAllTime:n('rejectedAllTime'),conflictAllTime:n('conflictAllTime'),contributorsAllTime:n('contributorsAllTime'),submittedInPeriod:n('submittedInPeriod'),approvedInPeriod:n('approvedInPeriod'),rejectedInPeriod:n('rejectedInPeriod'),conflictsInPeriod:n('conflictsInPeriod'),oldestPendingAt:typeof moderation?.oldestPendingAt==='string'?moderation.oldestPendingAt:null},activeClaims:claims?.n??0};
 }
