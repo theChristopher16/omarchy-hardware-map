@@ -61,7 +61,10 @@ remain unknown; padding or bypassing this check is not justified.
 A separate resource-ownership observer passed synthetic lifecycle tests and an
 offline kernel build with readiness explicitly unsupported. Its complete
 module contains experimental controller code and was not loaded; continuous
-ownership through a real GPU identity operation remains unfinished. The
+ownership through a real GPU identity operation remains unfinished. A separate unlinked
+ownership-lifetime component passed synthetic concurrency checks and built as
+a module that deliberately refuses to load. No live owner, physical readiness
+or safe GPU shutdown is established by that build. The
 staged test kernel's GPU node has no explicit clock or reset properties; a
 fresh read-only inventory found the same absence on the current Linux GPU
 node. This describes the device tree, not physical clock or reset state.
