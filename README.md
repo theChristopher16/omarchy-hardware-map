@@ -2,7 +2,7 @@
 
 A community-maintained index of hardware observations, component details, build progress, and sources for Omarchy. This is an independent project, not an official Omarchy compatibility list.
 
-The repository contains the next development version; the moderation-enabled release awaits owner setup before publication. The live site stores reviewed records in its own database. This repository contains the application, the export tool, and a small sourced starter catalog. The catalog is a snapshot: the live database and GitHub do **not** synchronize automatically. Download the site's approved JSON export to capture the current published data.
+The repository contains the next development version; the moderation-enabled release awaits owner setup before publication. Once deployed, the reviewed site will store approved records in its own database. This repository contains the application, the export tool, and a small sourced starter catalog. The catalog is a snapshot: the live database and GitHub do **not** synchronize automatically. Download the site's approved JSON export to capture the current published data.
 
 ## Navigation model
 
