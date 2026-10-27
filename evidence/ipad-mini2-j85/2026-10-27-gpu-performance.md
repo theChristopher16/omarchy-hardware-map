@@ -80,8 +80,10 @@ hardware behavior remain open.
 An offline Mesa PowerVR no-op shim test verified two supported synthetic device
 identities. For an unsupported hypothetical identity, the shim warned and fell
 back to a default; an independent harness rejected the mismatch. The full
-PowerVR Vulkan ICD and shim have since built offline using dependencies from
-verified Ubuntu package indexes. With a synthetic BXS profile, the shim
+PowerVR Vulkan ICD and shim have since built offline from an unchanged local
+Mesa 26.2.5 snapshot, using dependencies checked against signed Ubuntu indexes
+and the lab's existing archive keyring. The Mesa source archive's upstream
+signature was not independently verified. With a synthetic BXS profile, the shim
 returned the expected identity, Mesa compiled a compute shader, and Vulkan
 created a compute pipeline. A separate synthetic Series 6XT GX6250 profile
 also compiled a shader and created a pipeline, but required Mesa's explicit
