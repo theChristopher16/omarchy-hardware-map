@@ -45,6 +45,10 @@ Separately, a staging helper was corrected to reject a copy outside its
 caller-declared extent even when the allocation is larger. The updated helper
 passed 59 synthetic host tests and a refusal-only ARM64 kernel build; it has
 not been loaded on the iPad and does not prove GPU DMA or firmware operation.
+A separate resource-ownership observer passed synthetic lifecycle tests and an
+offline kernel build with readiness explicitly unsupported. Its complete
+module contains experimental controller code and was not loaded; continuous
+ownership through a real GPU identity operation remains unfinished.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
