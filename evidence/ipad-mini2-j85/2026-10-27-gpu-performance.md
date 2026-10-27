@@ -75,6 +75,9 @@ requests a fixed mode; the source trace does not establish a physical change. A 
 of the running Linux device tree found no matching tuner or memory-controller
 compatible strings under the inspected SoC subtree; this does not establish
 physical absence or GPU readiness. No corresponding hardware access occurred.
+A separate offline identity-selection trace found that multiple synthetic
+revision inputs collapse to the same derived diagnostic profile. The profile
+alone cannot distinguish those revisions; no physical GPU identity was read.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
