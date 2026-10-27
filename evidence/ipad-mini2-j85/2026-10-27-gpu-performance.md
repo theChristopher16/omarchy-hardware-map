@@ -47,7 +47,10 @@ passed 59 synthetic host tests and a refusal-only ARM64 kernel build; it has
 not been loaded on the iPad and does not prove GPU DMA or firmware operation.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
-been demonstrated.
+been demonstrated. A source review of the available Linux and Mesa snapshots
+also found separate device-identity and userspace-interface requirements; a
+first GPU job alone would not establish a working compositor. The J85 GPU's
+actual identity and driver compatibility remain unmeasured.
 
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
