@@ -133,5 +133,7 @@ A later read of the running kernel's device-tree metadata found the disabled GPU
 
 A public-source review did not find a supported open-source firmware build for a verified J85 GPU identity. [TI's open-stack documentation](https://software-dl.ti.com/processor-sdk-linux/esd/AM62X/10_01_10_04/exports/docs/linux/Foundational_Components/Graphics/Rogue/Build_Guide.html#open-source-firmware) describes the firmware in that release as a closed-source binary. Linux checks device identity and firmware metadata; a different device's GPU name or firmware is not evidence of a J85 match. This review does not rule out every possible firmware source.
 
+A public MediaTek Rogue source trace shows its debug operation named 64-bit uses two ordered 32-bit CPU MMIO reads; the wider debug sequence reads identity before clock status and can perform a register write. A separate Moorefield-targeted tree uses the same generic register header, so that shared file is not independent confirmation for J85. No GPU register was read for this comparison.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
