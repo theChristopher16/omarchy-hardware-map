@@ -16,5 +16,10 @@ hardware operation was performed for this inventory. Absence of the driver or
 logs does not prove a cold hardware state. Repeatable startup, safe ownership
 and cleanup, and a physical touch check on this boot remain open.
 
+An isolated source change removes periodic worker wakeups while the touch
+scanner is inactive, while leaving active polling unchanged. Host concurrency
+and fault tests passed; the change has not been built for the target kernel or
+run on the iPad, so no battery-life or touch improvement is claimed.
+
 No recovered firmware, calibration, private logs, credentials, network
 addresses or personal device identifiers are included here.
