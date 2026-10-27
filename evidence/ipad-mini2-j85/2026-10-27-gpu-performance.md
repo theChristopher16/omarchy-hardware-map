@@ -83,8 +83,11 @@ back to a default; an independent harness rejected the mismatch. The full
 PowerVR Vulkan ICD and shim have since built offline using dependencies from
 verified Ubuntu package indexes. With a synthetic BXS profile, the shim
 returned the expected identity, Mesa compiled a compute shader, and Vulkan
-created a compute pipeline. No job was submitted and no GPU executed it. The
-real J85 GPU identity and compatibility have not been measured.
+created a compute pipeline. A separate synthetic Series 6XT GX6250 profile
+also compiled a shader and created a pipeline, but required Mesa's explicit
+experimental opt-in and emitted warnings about missing hardware workarounds.
+No job was submitted and no GPU executed either pipeline. Neither synthetic
+identity is a measured J85 identity; actual J85 compatibility remains unknown.
 
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
