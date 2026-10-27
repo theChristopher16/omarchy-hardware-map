@@ -127,5 +127,7 @@ A separate [public Fugu reference table](https://github.com/LineageOS/android_ke
 describes an older G6430 reference with different feature and errata values;
 it does not identify the J85 or establish compatible firmware.
 
+A later source-pinned host harness checked how Mesa handles unsupported simulated GPU identities. With assertions enabled, the selected Mesa function aborted; with assertions disabled, the shim path fell back to a different GPU identity. An exact-identity check rejected both outcomes across 14 synthetic cases. This harness used stubs rather than the full driver, and neither result identifies the iPad GPU or proves rendering support. The [Mesa support table](https://docs.mesa3d.org/drivers/powervr.html) lists GX6250 as partial support, which does not establish support for J85.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
