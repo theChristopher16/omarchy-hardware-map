@@ -6,7 +6,7 @@ The [live site](https://omarchy-fieldnotes.smithstation1.chatgpt.site/) stores a
 
 ## Navigation model
 
-`Omarchy → component type → component manufacturer → component model → report`. Each report also connects to the device and source it describes. Unknown manufacturer or model values remain explicitly unspecified. The same component can occur in multiple devices, and reports retain their own firmware, version, outcome, and build context.
+`Omarchy → component type → component manufacturer → component model → report`. Each report also connects to the device and source it describes. Unknown manufacturer or model values remain explicitly unspecified. The same component can occur in multiple devices, and reports retain their own firmware, version, outcome, and build context. The graph places the root at the bottom and supports animated nodes, dragging, canvas panning, zooming, and a motion pause control. It respects the browser’s reduced-motion preference.
 
 ## Project layout
 
