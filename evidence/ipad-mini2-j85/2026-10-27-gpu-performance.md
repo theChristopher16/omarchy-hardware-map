@@ -71,5 +71,17 @@ also found separate device-identity and userspace-interface requirements; a
 first GPU job alone would not establish a working compositor. The J85 GPU's
 actual identity and driver compatibility remain unmeasured.
 
+A separate C preflight for a restricted firmware-command shape passed 366
+synthetic differential cases and additional buffer-alias and corrupted-plan
+checks. It compiled to ARM64 objects, but it is not linked to a kernel or a
+native firmware loader. Address translation, synchronization, publication and
+hardware behavior remain open.
+
+An offline Mesa PowerVR no-op shim test verified two supported synthetic device
+identities. For an unsupported hypothetical identity, the shim warned and fell
+back to a default; an independent harness rejected the mismatch. The full
+PowerVR Vulkan compiler was not built or exercised, and the real J85 GPU
+identity has not been measured. These results do not demonstrate a GPU job.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
