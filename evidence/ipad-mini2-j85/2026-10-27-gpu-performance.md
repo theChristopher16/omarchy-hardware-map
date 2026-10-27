@@ -80,8 +80,11 @@ hardware behavior remain open.
 An offline Mesa PowerVR no-op shim test verified two supported synthetic device
 identities. For an unsupported hypothetical identity, the shim warned and fell
 back to a default; an independent harness rejected the mismatch. The full
-PowerVR Vulkan compiler was not built or exercised, and the real J85 GPU
-identity has not been measured. These results do not demonstrate a GPU job.
+PowerVR Vulkan ICD and shim have since built offline using dependencies from
+verified Ubuntu package indexes. With a synthetic BXS profile, the shim
+returned the expected identity, Mesa compiled a compute shader, and Vulkan
+created a compute pipeline. No job was submitted and no GPU executed it. The
+real J85 GPU identity and compatibility have not been measured.
 
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
