@@ -32,7 +32,11 @@ initializer clears both arrays before property lookup; a simulated provider
 side effect can still change them. Actual provider behavior and configuration
 remain unverified. Another offline source branch uses built-in fallback
 records when a configuration bit is set; the actual setting and whether
-that path applies to the iPad remain unverified.
+that path applies to the iPad remain unverified. In the selected original
+initialization path, a provider property named `model-slow` controls the
+fallback bit. A separate same-boot read did not find that property in the
+GPU device-metadata node. The original iOS provider could supply properties
+independently, so this does not establish the actual flag or clock state.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated.
