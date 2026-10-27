@@ -1,0 +1,1 @@
+ALTER TABLE `moderators` ADD `role` text DEFAULT 'moderator' NOT NULL;

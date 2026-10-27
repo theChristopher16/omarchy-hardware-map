@@ -5,7 +5,7 @@ export const reports = sqliteTable('reports', {
   source: text('source').notNull(), authorId: text('author_id').notNull(), createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at'), archivedAt: text('archived_at'), kind: text('kind').notNull().default('Community report'), specs: text('specs').notNull().default('{}'), buildStage: text('build_stage').notNull().default('Unknown'),
 });
-export const moderators = sqliteTable('moderators', {id:text('id').primaryKey(), createdAt:text('created_at').notNull()});
+export const moderators = sqliteTable('moderators', {id:text('id').primaryKey(), createdAt:text('created_at').notNull(), role:text('role').notNull().default('moderator')});
 export const proposals = sqliteTable('proposals', {
   id:text('id').primaryKey(), reportId:text('report_id'), authorId:text('author_id').notNull(), action:text('action').notNull(), state:text('state').notNull(),
   device:text('device').notNull(), component:text('component').notNull(), status:text('status').notNull(), version:text('version').notNull(), summary:text('summary').notNull(), source:text('source').notNull(),

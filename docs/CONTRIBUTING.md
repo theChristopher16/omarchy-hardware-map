@@ -6,4 +6,6 @@ Use exact model names where known. Add component manufacturer and model, archite
 
 A signed-in contributor can display a public name on a two-hour claim for a specific report. Claims show that someone is working on it; they expire automatically and do not prevent others from proposing changes. A claim's owner or a moderator can release it. Claims are coordination signals, not proof of testing or completion.
 
-Deployers must securely provision the first moderator's site-scoped user ID through their own private deployment administration before enabling public access. The repository deliberately does not include a public first-visitor moderator-setup endpoint. Moderator identity and database contents are deployment-specific and are not stored in the source repository.
+The owner can use the Site MCP to grant or revoke additional moderators by their site-scoped user ID. A collaborator can retrieve their own ID with the `get_access` MCP tool and share it with the owner. Moderator role changes require owner access; no one should be added without the owner's authorization.
+
+Deployers must securely provision the first owner's site-scoped user ID through their private deployment administration before enabling public access. This repository deliberately does not include a public first-visitor moderator setup endpoint. Identities and database contents are deployment-specific.
