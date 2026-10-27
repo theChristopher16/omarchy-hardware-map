@@ -91,6 +91,12 @@ GPU address translation, firmware acceptance or an accelerated frame. A CPU-only
 also rejects malformed synthetic address and ownership inputs, but accepts
 only caller claims; it cannot establish actual mappings, retained ownership,
 firmware compatibility or authority to publish.
+An isolated host integration now carries separate synthetic page-table-entry
+and catalogue addresses through the existing buffer-group and root-I/O bodies.
+A separate candidate copies a private CPU image into a DMA-owner staging buffer
+under host shims, and retains it if isolation fails. Both passed local fault
+and concurrency tests, but neither has a verified native translation or
+isolation provider, a target-kernel link, firmware handshake or GPU frame.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
