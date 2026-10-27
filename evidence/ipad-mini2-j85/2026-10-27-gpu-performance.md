@@ -51,8 +51,13 @@ checks and a separate refusal-only build. Its changed context layout requires
 consumers to rebuild, and it is not a functioning firmware handoff. An
 offline preflight now joins a restricted set of ordered firmware commands
 with the separate START-derived configuration patch; the saved firmware's
-structure passes with synthetic planner inputs. Checksum, mapping, overlap
-behavior, native ABI and publication remain unverified.
+structure passes with synthetic planner inputs. A later host-only test compared ordered overlapping CONFIG, LOAD and ZERO
+writes in a synthetic shared buffer with selected original-source traces. It
+does not establish native mapping, DMA visibility, firmware ABI or publication.
+The saved J85 firmware image is not a multiple of 4 KiB, so the pinned Linux
+PowerVR validator rejects it at its first size check without reaching later
+format fields. The original firmware checksum and complete validation path
+remain unknown; padding or bypassing this check is not justified.
 A separate resource-ownership observer passed synthetic lifecycle tests and an
 offline kernel build with readiness explicitly unsupported. Its complete
 module contains experimental controller code and was not loaded; continuous
