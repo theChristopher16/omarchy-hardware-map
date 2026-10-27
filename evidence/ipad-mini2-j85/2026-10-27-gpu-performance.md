@@ -129,5 +129,7 @@ it does not identify the J85 or establish compatible firmware.
 
 A later source-pinned host harness checked how Mesa handles unsupported simulated GPU identities. With assertions enabled, the selected Mesa function aborted; with assertions disabled, the shim path fell back to a different GPU identity. An exact-identity check rejected both outcomes across 14 synthetic cases. This harness used stubs rather than the full driver, and neither result identifies the iPad GPU or proves rendering support. The [Mesa support table](https://docs.mesa3d.org/drivers/powervr.html) lists GX6250 as partial support, which does not establish support for J85.
 
+A later read of the running kernel's device-tree metadata found the disabled GPU node has no clock or clock-name properties, and its ancestors have no clock-ranges property. The local PowerVR driver requires a core clock and passes its rate to firmware. This narrows the current binding gap; it does not exclude a separately registered clkdev mapping or measure the physical clock. No GPU register, power or clock change was made.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
