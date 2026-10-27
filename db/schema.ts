@@ -1,4 +1,4 @@
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 export const reports = sqliteTable('reports', {
   id: text('id').primaryKey(), device: text('device').notNull(), component: text('component').notNull(),
   status: text('status').notNull(), version: text('version').notNull(), summary: text('summary').notNull(),
@@ -12,3 +12,6 @@ export const proposals = sqliteTable('proposals', {
   specs:text('specs').notNull().default('{}'), buildStage:text('build_stage').notNull().default('Unknown'), baseUpdatedAt:text('base_updated_at'), createdAt:text('created_at').notNull(), reviewedAt:text('reviewed_at'), reviewerId:text('reviewer_id'), reviewNote:text('review_note'),
 });
 export const claims = sqliteTable('claims', {reportId:text('report_id').primaryKey(), userId:text('user_id').notNull(), handle:text('handle').notNull(), expiresAt:text('expires_at').notNull()});
+export const trafficDaily = sqliteTable('traffic_daily', {
+  day:text('day').primaryKey(), pageViews:integer('page_views').notNull().default(0), nodeSelections:integer('node_selections').notNull().default(0), sourceOpens:integer('source_opens').notNull().default(0),
+});

@@ -8,7 +8,7 @@ export const examples: Omit<Report,'specs'|'buildStage'>[] = [
 ];
 export async function allReports(): Promise<Report[]> {
  if (!env.DB) throw new Error('Database unavailable');
- const result=await env.DB.prepare('SELECT id, device, component, status, version, summary, source, created_at AS createdAt, kind, specs, build_stage AS buildStage FROM reports WHERE archived_at IS NULL ORDER BY created_at DESC LIMIT 500').all();
+ const result=await env.DB.prepare('SELECT id, device, component, status, version, summary, source, created_at AS createdAt, kind, specs, build_stage AS buildStage FROM reports WHERE archived_at IS NULL ORDER BY created_at DESC').all();
  return (result.results as unknown as (Omit<Report,'specs'>&{specs:string})[]).map(r=>({...r,specs:JSON.parse(r.specs||'{}')}));
 }
 export function parseReport(v:unknown) {
