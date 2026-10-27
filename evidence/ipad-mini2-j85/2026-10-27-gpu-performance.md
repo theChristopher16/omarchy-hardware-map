@@ -64,6 +64,11 @@ The local reset API can report zero for a missing optional reset handle;
 that is not evidence of a deasserted physical reset or a working clock.
 An offline source audit found performance counters but no established mapping
 from the observed records to GFX; no counter has been tested on the iPad.
+A further source trace found a conditional software link between GFX activity
+and a memory-controller configuration decision. A bounded read-only search
+of the running Linux device tree found no matching tuner or memory-controller
+compatible strings under the inspected SoC subtree; this does not establish
+physical absence or GPU readiness. No corresponding hardware access occurred.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
