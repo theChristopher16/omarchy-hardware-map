@@ -62,6 +62,8 @@ fresh read-only inventory found the same absence on the current Linux GPU
 node. This describes the device tree, not physical clock or reset state.
 The local reset API can report zero for a missing optional reset handle;
 that is not evidence of a deasserted physical reset or a working clock.
+An offline source audit found performance counters but no established mapping
+from the observed records to GFX; no counter has been tested on the iPad.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
