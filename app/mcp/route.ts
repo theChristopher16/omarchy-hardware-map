@@ -1,0 +1,28 @@
+import { allReports } from '../../lib/data';
+import * as proposals from '../api/proposals/route';
+import * as moderation from '../api/moderation/route';
+import * as claims from '../api/claims/route';
+import * as me from '../api/me/route';
+export const dynamic='force-dynamic';
+const reportFields={device:{type:'string'},component:{type:'string'},status:{type:'string',enum:['Working','Partly working','Not working','Workaround reported','Investigating','Documented support']},version:{type:'string'},summary:{type:'string'},source:{type:'string'},buildStage:{type:'string',enum:['Unknown','Researching','Boot blocked','Live boot','Installed','In use','Blocked','Ready']},componentVendor:{type:'string'},componentModel:{type:'string'},deviceVendor:{type:'string'},architecture:{type:'string'},cpu:{type:'string'},gpu:{type:'string'},memory:{type:'string'},wifi:{type:'string'},firmware:{type:'string'}};
+const toolList=[
+ {name:'search_hardware_reports',description:'Search approved hardware observations and source citations. Moderator approval is not independent verification.',inputSchema:{type:'object',properties:{query:{type:'string',description:'Device, component, manufacturer, model, version, or keyword'}},additionalProperties:false}},
+ {name:'get_access',description:'Check whether the caller is signed in and is a moderator.',inputSchema:{type:'object',properties:{},additionalProperties:false}},
+ {name:'list_my_proposals',description:'List the signed-in caller’s proposals and review decisions.',inputSchema:{type:'object',properties:{},additionalProperties:false}},
+ {name:'list_review_queue',description:'List pending proposals; requires moderator access.',inputSchema:{type:'object',properties:{},additionalProperties:false}},
+ {name:'submit_hardware_proposal',description:'Submit a new report, edit, or removal for human or authorized-agent moderator review. Existing reports remain public until approved. For edit or remove, include reportId and all current fields, changing only what is intended; for removal, summary should explain the reason.',inputSchema:{type:'object',properties:{action:{type:'string',enum:['create','edit','remove']},reportId:{type:'string'},...reportFields},required:['action','device','component','status','version','summary','source'],additionalProperties:false}},
+ {name:'review_hardware_proposal',description:'Approve or reject a pending proposal. Requires moderator access. An edit based on a stale version is marked as a conflict instead of overwriting newer data.',inputSchema:{type:'object',properties:{id:{type:'string'},decision:{type:'string',enum:['approve','reject']},note:{type:'string',description:'Optional public-to-contributor review note'}},required:['id','decision'],additionalProperties:false}},
+ {name:'list_work_claims',description:'List active, expiring work claims for published reports.',inputSchema:{type:'object',properties:{},additionalProperties:false}},
+ {name:'manage_work_claim',description:'Claim a report for two hours with an explicitly supplied public handle, or release your claim. Moderators may release any claim. A claim does not prevent edits.',inputSchema:{type:'object',properties:{reportId:{type:'string'},action:{type:'string',enum:['claim','release']},handle:{type:'string',description:'Public display name, required to claim'}},required:['reportId','action'],additionalProperties:false}}
+];
+export async function POST(req:Request){let body:any;try{body=await req.json()}catch{return Response.json({error:'Invalid JSON'},{status:400})}const {id,method,params}=body||{};const reply=(result:unknown)=>Response.json({jsonrpc:'2.0',id,result});
+ if(method==='server/discover')return reply({supportedVersions:['2026-07-28'],capabilities:{tools:{}}});
+ if(method==='initialize')return reply({protocolVersion:'2026-07-28',capabilities:{tools:{}},serverInfo:{name:'omarchy-hardware-map',version:'2.0.0'}});
+ if(method==='tools/list')return reply({tools:toolList});
+ if(method==='tools/call'){try{const name=params?.name,args=params?.arguments??{};if(typeof args!=='object'||Array.isArray(args)||args===null)throw Error('Invalid arguments.');let output:unknown;
+ if(name==='search_hardware_reports'){const q=args.query;if(q!==undefined&&(typeof q!=='string'||q.length>200))throw Error('Invalid query');const reports=await allReports();output={reports:(q?reports.filter(r=>JSON.stringify(r).toLowerCase().includes(q.toLowerCase())):reports).slice(0,50),note:'Approved community observations are not independently verified.'}}
+ else {const handlers:Record<string,()=>Promise<Response>>={get_access:()=>me.GET(),list_my_proposals:()=>proposals.GET(),list_review_queue:()=>moderation.GET(),list_work_claims:()=>claims.GET(),submit_hardware_proposal:()=>proposals.POST(internalRequest(req,args)),review_hardware_proposal:()=>moderation.POST(internalRequest(req,args)),manage_work_claim:()=>claims.POST(internalRequest(req,args))};if(!handlers[name])throw Error('Unknown tool.');const result=await handlers[name]();output=await result.json();if(!result.ok)return reply({isError:true,content:[{type:'text',text:JSON.stringify(output)}]})}
+ return reply({content:[{type:'text',text:JSON.stringify(output)}]});}catch(e){return reply({isError:true,content:[{type:'text',text:e instanceof Error?e.message:'Tool failed.'}]})}}
+ return Response.json({jsonrpc:'2.0',id,error:{code:-32601,message:'Method not found'}});
+}
+function internalRequest(original:Request,args:unknown){const origin=new URL(original.url).origin;return new Request(original.url,{method:'POST',headers:{'content-type':'application/json','origin':origin},body:JSON.stringify(args)})}
