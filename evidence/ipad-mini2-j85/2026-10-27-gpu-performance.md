@@ -27,7 +27,10 @@ that the firmware metadata had no such property; it did not establish the
 GPU object's auxiliary values or physical clock state. An offline trace of
 one selected new-object path zeroed synthetic performance fields, but a
 negative control showed that the absent-property path preserves pre-existing
-auxiliary changes. Intervening initialization remains unmodeled.
+auxiliary changes. A further source emulation showed that the selected
+initializer clears both arrays before property lookup; a simulated provider
+side effect can still change them. Actual provider behavior and configuration
+remain unverified.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated.
