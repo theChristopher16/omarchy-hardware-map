@@ -2,7 +2,7 @@
 
 A community-maintained index of hardware observations, component details, build progress, and sources for Omarchy. This is an independent project, not an official Omarchy compatibility list.
 
-The [live site](https://omarchy-fieldnotes.smithstation1.chatgpt.site/) stores approved records in its own database. This repository contains the application, the export tool, and a small sourced starter catalog. The catalog is a snapshot: the live database and GitHub do **not** synchronize automatically. Download the site's approved JSON export to capture the current published data.
+The [live site](https://omarchy-fieldnotes.smithstation1.chatgpt.site/) stores approved records in its own database. This repository contains the application, the export tool, and a source-linked catalog snapshot exported on October 27, 2026. The catalog is a snapshot: the live database and GitHub do **not** synchronize automatically. Download the site's approved JSON export to capture the current published data.
 
 ## Navigation model
 
@@ -13,7 +13,7 @@ The [live site](https://omarchy-fieldnotes.smithstation1.chatgpt.site/) stores a
 - `app/` — web interface, HTTP endpoints, and MCP server.
 - `db/` and `drizzle/` — database schema and append-only migrations.
 - `lib/` — shared data validation and report handling.
-- `hardware/` — source-linked starter examples organized by component, manufacturer, and model.
+- `hardware/` — source-linked snapshot records organized by component, manufacturer, and model.
 - `scripts/catalog/` — export conversion tool.
 - `docs/` — data model, contribution and moderation guidance.
 - `worker/`, `scripts/`, `vendor/` — Site hosting runtime and build support.

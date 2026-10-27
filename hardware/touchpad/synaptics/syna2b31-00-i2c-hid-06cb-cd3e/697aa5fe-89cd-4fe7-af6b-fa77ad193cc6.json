@@ -1,0 +1,17 @@
+{
+  "id": "697aa5fe-89cd-4fe7-af6b-fa77ad193cc6",
+  "device": "Lenovo Yoga C940-14IIL (81Q9)",
+  "component": "Touchpad",
+  "status": "Workaround reported",
+  "version": "Omarchy 4.0.6-1; linux-omarchy 7.2.8-9",
+  "summary": "After suspend, the reporter's pointer stopped moving while clicks and the separate touchscreen still worked. Rebinding the specific i2c_hid_acpi device restored movement; an automated fix was not established for this model. Related ASUS-specific proposed hook: https://github.com/omacom/omarchy/pull/10926 .",
+  "source": "https://github.com/omacom/omarchy/issues/16140",
+  "createdAt": "2026-10-27T18:38:52.830Z",
+  "kind": "Community report",
+  "specs": {
+    "componentVendor": "Synaptics",
+    "componentModel": "SYNA2B31:00 (I2C HID 06CB:CD3E)",
+    "deviceVendor": "Lenovo"
+  },
+  "buildStage": "In use"
+}

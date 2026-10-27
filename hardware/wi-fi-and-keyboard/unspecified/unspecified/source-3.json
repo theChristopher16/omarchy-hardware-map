@@ -1,1 +1,13 @@
-{"id":"source-3","device":"Intel Macs","component":"Wi-Fi and keyboard","status":"Documented support","version":"See current manual","buildStage":"Unknown","summary":"The Omarchy manual describes installer support for selected Intel Mac hardware and lists known limitations.","source":"https://github.com/omacom/omarchy/blob/quattro/manual/44-mac-support.md","kind":"Documentation","specs":{}}
+{
+  "id": "source-3",
+  "device": "Intel Macs",
+  "component": "Wi-Fi and keyboard",
+  "status": "Documented support",
+  "version": "See current manual",
+  "summary": "The Omarchy manual describes installer support for selected Intel Mac hardware and lists known limitations.",
+  "source": "https://github.com/omacom/omarchy/blob/quattro/manual/44-mac-support.md",
+  "createdAt": "",
+  "kind": "Documentation",
+  "specs": {},
+  "buildStage": "Unknown"
+}

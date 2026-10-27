@@ -1,0 +1,17 @@
+{
+  "id": "33f78040-4c74-4bf6-89ac-69c7f0401154",
+  "device": "Unspecified system (GeForce RTX 3080 Ti)",
+  "component": "Graphics",
+  "status": "Investigating",
+  "version": "Omarchy 4.0.0.r6863.ga15636b-1 edge; 7.2.8-5-omarchy-bore",
+  "summary": "A reporter observed an NVIDIA userspace/kernel-module version mismatch after a driver-only update without a reboot prompt. The issue describes reboot as the recovery path and proposed code in PR #14876: https://github.com/omacom/omarchy/pull/14876 . The report is specific to the listed driver versions and edge build.",
+  "source": "https://github.com/omacom/omarchy/issues/14875",
+  "createdAt": "2026-10-27T18:39:20.352Z",
+  "kind": "Community report",
+  "specs": {
+    "componentVendor": "NVIDIA",
+    "componentModel": "GeForce RTX 3080 Ti (GA102)",
+    "gpu": "NVIDIA GeForce RTX 3080 Ti"
+  },
+  "buildStage": "In use"
+}

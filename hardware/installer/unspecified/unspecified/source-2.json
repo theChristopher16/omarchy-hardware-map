@@ -1,1 +1,13 @@
-{"id":"source-2","device":"Framework Laptop 12","component":"Installer","status":"Workaround reported","version":"3.0.1–3.0.2","buildStage":"Unknown","summary":"A user reported an installer error after removing the USB when prompted; one attempt leaving it inserted did not show the error.","source":"https://github.com/basecamp/omarchy/issues/2215","kind":"Source report","specs":{}}
+{
+  "id": "source-2",
+  "device": "Framework Laptop 12",
+  "component": "Installer",
+  "status": "Workaround reported",
+  "version": "3.0.1–3.0.2",
+  "summary": "A user reported an installer error after removing the USB when prompted; one attempt leaving it inserted did not show the error.",
+  "source": "https://github.com/basecamp/omarchy/issues/2215",
+  "createdAt": "2025-10-04",
+  "kind": "Source report",
+  "specs": {},
+  "buildStage": "Unknown"
+}

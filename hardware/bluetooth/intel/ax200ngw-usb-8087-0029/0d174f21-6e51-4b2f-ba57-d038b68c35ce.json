@@ -1,0 +1,20 @@
+{
+  "id": "0d174f21-6e51-4b2f-ba57-d038b68c35ce",
+  "device": "Beelink SER9 (AZW SER9)",
+  "component": "Bluetooth",
+  "status": "Workaround reported",
+  "version": "Omarchy 4.0.4-1; linux-omarchy 7.2.5-3",
+  "summary": "The reporter observed a Bluetooth firmware initialization timeout after cold boot; reloading btusb restored the controller on this machine. The report discusses proposed recovery code in PR #13085: https://github.com/omacom/omarchy/pull/13085 . This is not proof the patch is merged or broadly tested.",
+  "source": "https://github.com/omacom/omarchy/issues/12519",
+  "createdAt": "2026-10-27T18:38:47.586Z",
+  "kind": "Community report",
+  "specs": {
+    "componentVendor": "Intel",
+    "componentModel": "AX200NGW (USB 8087:0029)",
+    "deviceVendor": "Beelink",
+    "cpu": "AMD Ryzen 7 255",
+    "wifi": "Intel AX200NGW",
+    "firmware": "Intel Bluetooth firmware intel/ibt-20-1-3.sfi"
+  },
+  "buildStage": "In use"
+}
