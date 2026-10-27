@@ -22,7 +22,9 @@ These tests are local and have not exercised the serializer on the iPad.
 The captured metadata's unused table bytes were zero. That does not prove
 that the original GPU object's unused slots or the separate auxiliary inputs
 are initialized correctly. A distinct source path references an optional
-SRAM performance table; the device's current value and effect remain unknown.
+SRAM performance table. A later read-only capture on the same RAM boot found
+that the firmware metadata had no such property; it did not establish the
+GPU object's auxiliary values or physical clock state.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated.
