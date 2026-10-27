@@ -57,7 +57,9 @@ A separate resource-ownership observer passed synthetic lifecycle tests and an
 offline kernel build with readiness explicitly unsupported. Its complete
 module contains experimental controller code and was not loaded; continuous
 ownership through a real GPU identity operation remains unfinished. The
-staged test kernel's GPU node has no explicit clock or reset properties.
+staged test kernel's GPU node has no explicit clock or reset properties; a
+fresh read-only inventory found the same absence on the current Linux GPU
+node. This describes the device tree, not physical clock or reset state.
 The local reset API can report zero for a missing optional reset handle;
 that is not evidence of a deasserted physical reset or a working clock.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
