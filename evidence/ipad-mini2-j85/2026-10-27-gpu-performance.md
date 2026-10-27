@@ -37,6 +37,14 @@ initialization path, a provider property named `model-slow` controls the
 fallback bit. A separate same-boot read did not find that property in the
 GPU device-metadata node. The original iOS provider could supply properties
 independently, so this does not establish the actual flag or clock state.
+A separate source trace found that the selected provider can copy an incoming
+registry entry's properties. The pinned original firmware tree also lacks the
+property, but boot-time augmentation and later changes remain possible.
+
+Separately, a staging helper was corrected to reject a copy outside its
+caller-declared extent even when the allocation is larger. The updated helper
+passed 59 synthetic host tests and a refusal-only ARM64 kernel build; it has
+not been loaded on the iPad and does not prove GPU DMA or firmware operation.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated.
