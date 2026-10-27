@@ -87,7 +87,10 @@ state, and provider lifetimes and real kernel linking remain unresolved. A
 separate private CPU firmware-staging candidate passed host sanitizer and
 fault tests using test-header shims; it does not publish to the device and
 has not been built against the target kernel. These candidates do not prove
-GPU address translation, firmware acceptance or an accelerated frame.
+GPU address translation, firmware acceptance or an accelerated frame. A CPU-only root preflight
+also rejects malformed synthetic address and ownership inputs, but accepts
+only caller claims; it cannot establish actual mappings, retained ownership,
+firmware compatibility or authority to publish.
 The framebuffer remains CPU-rendered: no GPU core identity, firmware
 handshake, submitted job, accelerated frame, or matching DRM/Mesa path has
 been demonstrated. A source review of the available Linux and Mesa snapshots
