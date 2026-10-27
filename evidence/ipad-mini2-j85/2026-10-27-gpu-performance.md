@@ -65,8 +65,8 @@ that is not evidence of a deasserted physical reset or a working clock.
 An offline source audit found performance counters but no established mapping
 from the observed records to GFX; no counter has been tested on the iPad.
 A further source trace found GFX-dependent configuration calculations in a
-SoC-tuner. Whether the calculated value affects the memory controller is
-unverified. A bounded read-only search
+SoC-tuner. The selected controller wrapper ignores that calculated value and
+requests a fixed mode; the source trace does not establish a physical change. A bounded read-only search
 of the running Linux device tree found no matching tuner or memory-controller
 compatible strings under the inspected SoC subtree; this does not establish
 physical absence or GPU readiness. No corresponding hardware access occurred.
