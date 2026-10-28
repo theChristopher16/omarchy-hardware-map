@@ -152,5 +152,7 @@ A later public-source comparison found an experimental [iPhone 5s/A7 emulator](h
 
 A newer [Orchard RAM-development interface](https://github.com/OrchardLinux/omarchy-a/commit/3d1a09d4b16560e83e29895d2faf8e2a4aa1dab2) could assist a future J85 recipe, but its example targets a different device and warns rather than rejects a mismatch. A safe J85 adaptation needs a hard device-identity check and matching boot artifacts. It does not provide J85 GPU support.
 
+On a later direct-USB runtime9 RAM boot, a single framework-owned 15 ms GFX power hold completed on the physical iPad. The driver reported ON acknowledgement, a confirming PMGR read, OFF acknowledgement and clean scope release; the same boot and idle GFX state were observed afterward. A separate bounded selected ADT read from reserved system RAM matched the earlier populated bridge-property fingerprint. The operator had a recent 53% state-of-charge reading, but no fresh voltage, temperature or input-current reading; this was not a wall-power admission. Neither test accessed GPU-core, Fender or bridge registers, executed the sequencer, loaded GPU firmware, submitted a job or produced an accelerated frame.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
