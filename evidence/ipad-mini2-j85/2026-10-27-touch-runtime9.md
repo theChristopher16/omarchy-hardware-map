@@ -21,5 +21,13 @@ scanner is inactive, while leaving active polling unchanged. Host concurrency
 and fault tests passed; the change has not been built for the target kernel or
 run on the iPad, so no battery-life or touch improvement is claimed.
 
+An offline on-screen keyboard candidate rejects invalid font characters before
+replacing the keyboard and checks compositor visibility after a failed-theme
+rollback. Twenty-three process and state tests passed on macOS and isolated
+x86_64 Linux using simulated compositor and process behavior. A single-file
+overlay is pinned to a previously verified R11 RAM desktop image; no updated
+full image has been built and neither the overlay nor physical typing has
+been tested on the iPad.
+
 No recovered firmware, calibration, private logs, credentials, network
 addresses or personal device identifiers are included here.
