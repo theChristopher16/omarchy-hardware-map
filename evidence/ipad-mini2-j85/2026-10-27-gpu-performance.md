@@ -183,5 +183,7 @@ A two-read GPU identity diagnostic and a narrower software-deadline revision wer
 
 A newer request-age revision of that diagnostic has now cross-built against the saved runtime9 kernel. Its architecture, source identifier, saved-kernel vermagic and imported symbol names were checked; module versioning was disabled, so these checks do not prove the running kernel ABI. The module has not been loaded or tested on the iPad. Its additional age checks are cooperative: they cannot interrupt a stalled read or undo a power transition that has already started.
 
+A [developer report](https://forums.imgtec.com/t/powervr-g6430-on-linux-with-libhybris/3320) describes hardware-accelerated KWin on an Intel Nexus Player G6430 using that device's Android graphics stack through libhybris, with stability issues. A separate [MT8173 GX6250 kernel patch report](https://patchew.org/linux/20260728091804.382753-1-wenst@chromium.org/) describes experimental Mesa and Zink rendering with that device's matching firmware. These are different devices and driver paths; neither establishes the iPad's GPU identity, a compatible firmware image, licensing rights, or working J85 acceleration.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
