@@ -26,7 +26,7 @@ before polling and rechecks a queued action under the polling lock. Controlled
 host races reproduced an extra poll in the old worker and passed with the
 revision; the existing worker tests and ThreadSanitizer cases passed. The
 private opt-in module cross-built against the same runtime9 kernel but has
-not been loaded or packaged. It cannot preempt an in-flight poll.
+not been loaded or packaged. It cannot preempt an in-flight poll. A later source-backed synthetic test found that a new contact can receive `-ENOSPC` when all 16 Linux slots are occupied before frame sync drops stale contacts. A candidate now allocates 32 Linux slots while retaining the 16-record parser limit. It passed replacement and 25,000 synthetic mixed/churn frames against selected matching kernel input functions and cross-built for runtime9. It was not packaged or tested on the iPad; physical touch capacity, event delivery and compositor compatibility remain unverified.
 
 An offline on-screen keyboard candidate rejects invalid font characters before
 replacing the keyboard and checks compositor visibility after a failed-theme
