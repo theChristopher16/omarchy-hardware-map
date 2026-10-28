@@ -148,5 +148,9 @@ acceptance, or a GPU-rendered frame.
 
 The previously host-tested durable GPU owner and publication anchor now compile and link with the real staging-controller bodies as a refusal-only check against a saved, unbooted v3 kernel variant. Both the linked module initializer and worker start return `-EOPNOTSUPP`; the module was not loaded. The worker still has placeholder metadata and no registered frontend or hardware-proof provider. This does not establish a GPU identity, safe ownership, firmware execution, job or frame.
 
+A later public-source comparison found an experimental [iPhone 5s/A7 emulator](https://github.com/rabbanilham/vphone-legacy/blob/c52b2ddf0a548e43e6a3f43227a1a63936179b27/backend/s5l8960x.c#L4910-L4952) that describes a sequencer-based boot program. Its modeled GPU windows and reset-bit behavior resemble already-recorded J85 source metadata, suggesting an offline comparison with the J85 companion-routed startup path. The emulator schedules a synthetic firmware-alive event and does not model real bridge, clock or firmware execution; it supplies no measured J85 GPU identity, clock rate, driver or rendered frame. Its N53/iOS 7 model is not a physical J85 test. No emulator code or recovered firmware was transferred or executed on the iPad.
+
+A newer [Orchard RAM-development interface](https://github.com/OrchardLinux/omarchy-a/commit/3d1a09d4b16560e83e29895d2faf8e2a4aa1dab2) could assist a future J85 recipe, but its example targets a different device and warns rather than rejects a mismatch. A safe J85 adaptation needs a hard device-identity check and matching boot artifacts. It does not provide J85 GPU support.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
