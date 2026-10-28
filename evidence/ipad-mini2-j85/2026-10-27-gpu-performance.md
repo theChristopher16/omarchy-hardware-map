@@ -199,5 +199,7 @@ A separate parser regression for a truncated GPU-ID override was built as ARM64 
 
 An isolated x86-64 Mesa 26.2.5 build compiled a candidate unsupported-BVNC error-handling change in both assertion-enabled and release configurations with the PowerVR Services backend enabled. Each build passed Mesa's PowerVR symbols check and a device-free test linked to its built common library; the original debug source aborted in a negative control. No real Services-server cleanup was exercised. The release no-op shim retains its documented default-profile fallback, and separate host tests found malformed overrides can alias a known profile; checking the returned identifier remains necessary. None of these builds or shim results establishes J85 identity, firmware compatibility, GPU execution, or an accelerated frame.
 
+[Project Cascadia](https://github.com/rzxvx/Project-Cascadia/blob/e8f3e045a5e38bde5a5a79e1cc72ae22020d63ac/README.md) reports accelerated SGX543MP2 rendering and a Mesa/OpenGL stack on an A5 iPad mini 1 using GPU firmware from an iOS image. Its authors list the A7 iPad mini 2 as a future target. These are the project's reports about a different device; they do not establish the mini 2's GPU identity, compatible firmware, a working driver, or an accelerated frame.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
