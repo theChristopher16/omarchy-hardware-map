@@ -51,3 +51,16 @@ releases unsent. Actual Caps Lock and AltGr behavior in the compositor also
 remain unverified. The candidate is not ready to install. Its source and local
 review artifacts are not included in this public note, and no new physical
 touch, keyboard or accelerated-GPU result is claimed.
+
+## Keymap sizing
+
+A separate offline source review found that the saved keyboard's keymap upload
+allocated and supplied the formatted string length without its terminating
+NUL, while copying the NUL as well. A source-only candidate uses the
+NUL-inclusive size and checks formatting and allocation failures. Four author
+host-test methods and 42 independent formatted keymap/file cases passed in
+normal and optimized Python. An independent test also reproduced an existing
+file-descriptor and mapping leak after successful uploads; the size candidate
+does not fix that leak. These tests did not perform a full XKB parse, run a
+compositor, build the ARM64 application or access the iPad. The candidate has
+not been installed; its detailed local test artifacts are not included here.
