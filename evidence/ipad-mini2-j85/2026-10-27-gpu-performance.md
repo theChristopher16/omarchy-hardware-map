@@ -1,7 +1,7 @@
 # iPad mini 2 J85 GPU performance-record investigation
 
 This is an owner-run experimental report for one iPad mini 2 Wi-Fi
-(A1489/J85, Apple A7), updated 27 October 2026. It is not an OrchardLinux
+(A1489/J85, Apple A7), updated 28 October 2026. It is not an OrchardLinux
 device profile or installation guide. The [draft J85 bring-up report](https://github.com/OrchardLinux/hardware/pull/5) gives the wider physical
 boot, touch, Wi-Fi and GPU-power context.
 
@@ -153,6 +153,22 @@ A later public-source comparison found an experimental [iPhone 5s/A7 emulator](h
 A newer [Orchard RAM-development interface](https://github.com/OrchardLinux/omarchy-a/commit/3d1a09d4b16560e83e29895d2faf8e2a4aa1dab2) could assist a future J85 recipe, but its example targets a different device and warns rather than rejects a mismatch. A safe J85 adaptation needs a hard device-identity check and matching boot artifacts. It does not provide J85 GPU support.
 
 On a later direct-USB runtime9 RAM boot, a single framework-owned 15 ms GFX power hold completed on the physical iPad. The driver reported ON acknowledgement, a confirming PMGR read, OFF acknowledgement and clean scope release; the same boot and idle GFX state were observed afterward. A separate bounded selected ADT read from reserved system RAM matched the earlier populated bridge-property fingerprint. The operator had a recent 53% state-of-charge reading, but no fresh voltage, temperature or input-current reading; this was not a wall-power admission. Neither test accessed GPU-core, Fender or bridge registers, executed the sequencer, loaded GPU firmware, submitted a job or produced an accelerated frame.
+
+On the same runtime9 USB session, a later read-only Linux inventory found
+`simple-framebuffer`/`simpledrm` bound to `card0` and no DRM render node.
+The Linux clock summary exposed no GPU-named clock; that does not measure the
+physical GPU clock or establish reset/fabric readiness. No GPU register was
+accessed in this inventory.
+
+A host-only negative control used the existing J85-format parser with a padded
+synthetic record using the 40-byte layout described by the [A7 emulator](https://github.com/rabbanilham/vphone-legacy/blob/c52b2ddf0a548e43e6a3f43227a1a63936179b27/backend/s5l8960x.c#L4920-L4950).
+The saved J85 source trace describes a 44-byte record. In the constructed
+case, interpreting the other layout as J85 produced a false alive event. This
+is not a defect inside the parser's stated frozen-J85-input contract, nor a
+physical iPad observation; the two descriptions are not proved to describe
+the same live queue. A future hardware adapter must establish firmware and
+queue-layout provenance, mapping ownership, and reset epoch before trusting
+such an event as a hardware-ready signal.
 
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
