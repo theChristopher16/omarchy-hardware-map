@@ -123,9 +123,15 @@ also compiled a shader and created a pipeline, but required Mesa's explicit
 experimental opt-in and emitted warnings about missing hardware workarounds.
 No job was submitted and no GPU executed either pipeline. Neither synthetic
 identity is a measured J85 identity; actual J85 compatibility remains unknown.
-A separate [public Fugu reference table](https://github.com/LineageOS/android_kernel_asus_fugu/blob/13030953e0359cce6a830b8e1a35954fe4399b73/drivers/staging/imgtec/rogue/hwdefs/km/rgx_bvnc_table_km.h#L99-L107)
-describes an older G6430 reference with different feature and errata values;
-it does not identify the J85 or establish compatible firmware.
+A [published GPU experiment](https://www.andreil.eu/papers/oopsla17.pdf#page=4)
+identifies its ASUS Nexus Player TV000I setup as a PowerVR G6430. Separately,
+a [Fugu Android manifest](https://android.googlesource.com/device/asus/fugu/+/fc921e91f0ee8a737ddd85ef9ca7ddb5e6f79886/proprietary-blobs.txt)
+lists a firmware filename containing `1.72.4.12`, and a
+[vendor-authored source table hosted by LineageOS](https://github.com/LineageOS/android_kernel_asus_fugu/blob/13030953e0359cce6a830b8e1a35954fe4399b73/drivers/staging/imgtec/rogue/hwdefs/km/rgx_bvnc_table_km.h#L99-L107)
+and its [generated configuration header](https://github.com/LineageOS/android_kernel_asus_fugu/blob/13030953e0359cce6a830b8e1a35954fe4399b73/drivers/staging/imgtec/rogue/hwdefs/km/configs/rgxconfig_km_1.V.4.12.h#L48-L68)
+describe a `1.V.4.12` feature configuration. These related references do not establish
+a measured BVNC on that Nexus Player, identify the J85 GPU, or establish
+compatible J85 firmware.
 
 A later source-pinned host harness checked how Mesa handles unsupported simulated GPU identities. With assertions enabled, the selected Mesa function aborted; with assertions disabled, the shim path fell back to a different GPU identity. An exact-identity check rejected both outcomes across 14 synthetic cases. This harness used stubs rather than the full driver, and neither result identifies the iPad GPU or proves rendering support. The [Mesa support table](https://docs.mesa3d.org/drivers/powervr.html) lists GX6250 as partial support, which does not establish support for J85.
 
