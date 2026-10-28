@@ -16,10 +16,12 @@ hardware operation was performed for this inventory. Absence of the driver or
 logs does not prove a cold hardware state. Repeatable startup, safe ownership
 and cleanup, and a physical touch check on this boot remain open.
 
-An isolated source change removes periodic worker wakeups while the touch
+An isolated source change removes the periodic worker timer while the touch
 scanner is inactive, while leaving active polling unchanged. Host concurrency
-and fault tests passed; the change has not been built for the target kernel or
-run on the iPad, so no battery-life or touch improvement is claimed.
+and fault tests passed, and the candidate module cross-built for the saved
+runtime9 kernel. Exact-kernel source-order checks covered the wait and stop
+paths. The module has not been loaded or run on the iPad, so no battery-life
+or touch improvement is claimed.
 
 An offline on-screen keyboard candidate rejects invalid font characters before
 replacing the keyboard and checks compositor visibility after a failed-theme
