@@ -146,5 +146,7 @@ initializer and both publication functions return `-EOPNOTSUPP`; the module
 was not loaded. It does not establish real DMA mapping or coherency, firmware
 acceptance, or a GPU-rendered frame.
 
+The previously host-tested durable GPU owner and publication anchor now compile and link with the real staging-controller bodies as a refusal-only check against a saved, unbooted v3 kernel variant. Both the linked module initializer and worker start return `-EOPNOTSUPP`; the module was not loaded. The worker still has placeholder metadata and no registered frontend or hardware-proof provider. This does not establish a GPU identity, safe ownership, firmware execution, job or frame.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
