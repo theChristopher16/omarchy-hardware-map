@@ -21,7 +21,12 @@ scanner is inactive, while leaving active polling unchanged. Host concurrency
 and fault tests passed, and the candidate module cross-built for the saved
 runtime9 kernel. Exact-kernel source-order checks covered the wait and stop
 paths. The module has not been loaded or run on the iPad, so no battery-life
-or touch improvement is claimed.
+or touch improvement is claimed. A later worker revision checks for stop
+before polling and rechecks a queued action under the polling lock. Controlled
+host races reproduced an extra poll in the old worker and passed with the
+revision; the existing worker tests and ThreadSanitizer cases passed. The
+private opt-in module cross-built against the same runtime9 kernel but has
+not been loaded or packaged. It cannot preempt an in-flight poll.
 
 An offline on-screen keyboard candidate rejects invalid font characters before
 replacing the keyboard and checks compositor visibility after a failed-theme
