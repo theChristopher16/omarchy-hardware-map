@@ -191,5 +191,7 @@ A host fixture compiled selected declarations from the pinned public legacy Serv
 
 A separate parser regression for a truncated GPU-ID override was built as ARM64 kernel translation units against a saved Linux source snapshot; a host shim reproduced the failure and the patched behavior. KUnit has not run in a kernel, and no iPad GPU ID was measured. The same issue was [reported and patched publicly in February 2026](https://github.com/linux-mailinglist-archives/dri-devel.lists.freedesktop.org.0/commit/5391bf9a91d76fb885043748e5ac9ac04cd7fcb0); the earlier proposal's present upstream status remains unverified.
 
+An isolated x86-64 Mesa 26.2.5 build compiled a candidate unsupported-BVNC error-handling change in both assertion-enabled and release configurations with the PowerVR Services backend enabled. Each build passed Mesa's PowerVR symbols check and a device-free test linked to its built common library; the original debug source aborted in a negative control. No real Services-server cleanup was exercised. The release no-op shim retains its documented default-profile fallback, and separate host tests found malformed overrides can alias a known profile; checking the returned identifier remains necessary. None of these builds or shim results establishes J85 identity, firmware compatibility, GPU execution, or an accelerated frame.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
