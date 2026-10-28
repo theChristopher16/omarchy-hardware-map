@@ -24,10 +24,10 @@ run on the iPad, so no battery-life or touch improvement is claimed.
 An offline on-screen keyboard candidate rejects invalid font characters before
 replacing the keyboard and checks compositor visibility after a failed-theme
 rollback. Twenty-three process and state tests passed on macOS and isolated
-x86_64 Linux using simulated compositor and process behavior. A single-file
-overlay is pinned to a previously verified R11 RAM desktop image; no updated
-full image has been built and neither the overlay nor physical typing has
-been tested on the iPad.
+x86_64 Linux using simulated compositor and process behavior. A new R12 RAM desktop image contains the keyboard change, with all 7,249 files
+and symlinks verified through an offline round trip and independent comparison
+of ownership, modes, directory metadata and hardlink groups. R12 has not been
+booted or tested on the iPad; physical typing remains unverified.
 
 No recovered firmware, calibration, private logs, credentials, network
 addresses or personal device identifiers are included here.
