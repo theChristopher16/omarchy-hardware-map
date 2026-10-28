@@ -160,8 +160,10 @@ The Linux clock summary exposed no GPU-named clock; that does not measure the
 physical GPU clock or establish reset/fabric readiness. A same-boot scan of
 existing platform-device device-tree links found zero matching the disabled GPU
 node. This observes Linux registration only; it does not establish that the
-physical GPU or an IOMMU is absent. No device was created or bound, and no GPU
-register was accessed in this inventory.
+physical GPU or an IOMMU is absent. No device was created or bound, and no direct GPU register access was requested.
+The filtered Linux clock-summary read may runtime-resume clock providers and
+invoke callbacks; transient provider effects were not excluded. GFX was
+reported off in the subsequent framework listing.
 
 A host-only negative control used the existing J85-format parser with a padded
 synthetic record using the 40-byte layout described by the [A7 emulator](https://github.com/rabbanilham/vphone-legacy/blob/c52b2ddf0a548e43e6a3f43227a1a63936179b27/backend/s5l8960x.c#L4920-L4950).
