@@ -170,5 +170,7 @@ the same live queue. A future hardware adapter must establish firmware and
 queue-layout provenance, mapping ownership, and reset epoch before trusting
 such an event as a hardware-ready signal.
 
+An older [Series6 vendor driver for Intel Moorefield](https://github.com/BORETS24/Marshmallow-kernel-for-Asus-Zenfone-2-ZE551ML-ZE550ML/blob/10dfa0bc46b3c442ba204636a8e48d3a5747ca16/kernel/drivers/external_drivers/intel_media/graphics/rgx/services/server/devices/rgx/rgxpower.c) provides a dual MIT/GPLv2 source reference for legacy startup and firmware interfaces. Its configured BVNC and SoC differ from the iPad, and its cache, register-width and clock paths are conditional. A synthetic comparison of its page-catalogue address encoding with the A7 emulator model passed 65,566 aligned cases; this is not a physical J85 DMA or page-table test. Actual J85 identity, encoding, firmware and safe initialization remain unknown.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
