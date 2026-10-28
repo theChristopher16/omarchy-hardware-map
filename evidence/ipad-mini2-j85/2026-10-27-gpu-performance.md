@@ -201,5 +201,7 @@ An isolated x86-64 Mesa 26.2.5 build compiled a candidate unsupported-BVNC error
 
 [Project Cascadia](https://github.com/rzxvx/Project-Cascadia/blob/e8f3e045a5e38bde5a5a79e1cc72ae22020d63ac/README.md) reports accelerated SGX543MP2 rendering and a Mesa/OpenGL stack on an A5 iPad mini 1 using GPU firmware from an iOS image. Its authors list the A7 iPad mini 2 as a future target. These are the project's reports about a different device; they do not establish the mini 2's GPU identity, compatible firmware, a working driver, or an accelerated frame.
 
+[bgfx's draw-stress table](https://github.com/bkaradzic/bgfx/blob/43670897053e60bf5f73730325bf37ec0890d714/docs/examples.rst#L330-L339) lists an iPad mini 2 with a PVR G6430 GPU for an ES2, ARM64/Clang, iOS 7 test. The row was [contributed in 2014](https://github.com/bkaradzic/bgfx/pull/80); it does not specify the tablet variant, how its GPU name was verified, or a BVNC. This is a model-family reference, not a measured GPU identity for this J85 or evidence of Linux GPU support or accelerated rendering.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
