@@ -181,5 +181,7 @@ A public-source comparison found that Mesa's open [PowerVR Services winsys](http
 
 A two-read GPU identity diagnostic and a narrower software-deadline revision were cross-built against the saved runtime9 kernel but have not been loaded or tested on the iPad. The candidate's setup may register a temporary platform device and change power or DMA-related state. It intentionally retains its scope and system-wide locks after registration or possible GPU access; a normal reboot may block. A software deadline cannot interrupt a stalled hardware read. Clock, reset, bridge and safe-register readiness are not established, and any returned words would not by themselves establish a compatible driver, GPU job or rendered frame.
 
+A newer request-age revision of that diagnostic has now cross-built against the saved runtime9 kernel. Its architecture, source identifier, saved-kernel vermagic and imported symbol names were checked; module versioning was disabled, so these checks do not prove the running kernel ABI. The module has not been loaded or tested on the iPad. Its additional age checks are cooperative: they cannot interrupt a stalled read or undo a power transition that has already started.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
