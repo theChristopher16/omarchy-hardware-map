@@ -177,5 +177,7 @@ An older [Series6 vendor driver for Intel Moorefield](https://github.com/BORETS2
 
 A public-source comparison found that Mesa's open [PowerVR Services winsys](https://github.com/chaotic-cx/mesa-mirror/blob/2736dd1220d58192f5591ca6f9fcc5e60ee368ad/src/imagination/vulkan/winsys/pvrsrvkm/pvr_srv.c) targets a 1.17 kernel interface, while the examined Moorefield vendor driver identifies as DDK 1.5. Their connection structures and bridge commands differ, and Mesa does not provide a device profile for that known Moorefield branch-1 BVNC. An adapter would require explicit ABI and GPU-profile work; changing a version check alone would not establish compatibility. This compares public code for a different device and does not identify the J85 GPU or firmware.
 
+A two-read GPU identity diagnostic and a narrower software-deadline revision were cross-built against the saved runtime9 kernel but have not been loaded or tested on the iPad. The candidate's setup may register a temporary platform device and change power or DMA-related state. It intentionally retains its scope and system-wide locks after registration or possible GPU access; a normal reboot may block. A software deadline cannot interrupt a stalled hardware read. Clock, reset, bridge and safe-register readiness are not established, and any returned words would not by themselves establish a compatible driver, GPU job or rendered frame.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
