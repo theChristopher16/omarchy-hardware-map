@@ -137,5 +137,12 @@ A public-source review did not find a supported open-source firmware build for a
 
 A public MediaTek Rogue source trace shows its debug operation named 64-bit uses two ordered 32-bit CPU MMIO reads; the wider debug sequence reads identity before clock status and can perform a register write. A separate Moorefield-targeted tree uses the same generic register header, so that shared file is not independent confirmation for J85. No GPU register was read for this comparison.
 
+An offline CPU-image-to-DMA staging experiment, previously exercised with
+synthetic Linux and DMA shims, now compiles and links against the exact
+runtime9 kernel. Independent AArch64 disassembly shows its check-module
+initializer and both publication functions return `-EOPNOTSUPP`; the module
+was not loaded. It does not establish real DMA mapping or coherency, firmware
+acceptance, or a GPU-rendered frame.
+
 No recovered Apple firmware, instruction bytes, device tree, calibration,
 private logs, credentials, or personal device identifiers are included here.
