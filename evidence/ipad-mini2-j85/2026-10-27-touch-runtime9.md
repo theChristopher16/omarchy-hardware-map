@@ -36,5 +36,7 @@ and symlinks verified through an offline round trip and independent comparison
 of ownership, modes, directory metadata and hardlink groups. R12 has not been
 booted or tested on the iPad; physical typing remains unverified.
 
+A later offline preflight checks the actual R12 keyboard and dictation files together with the previously booted runtime9 RAM kit. It does not establish live touch, memory fit, charging, compositor operation or physical typing.
+
 No recovered firmware, calibration, private logs, credentials, network
 addresses or personal device identifiers are included here.
