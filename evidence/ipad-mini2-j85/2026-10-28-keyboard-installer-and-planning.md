@@ -75,3 +75,21 @@ marshalling. Public source for two libwayland revisions does so, but the
 iPad's actual runtime library and the source-to-binary relationship have not
 been verified. A queued request is not proof of compositor delivery. The
 cleanup candidate is not ready to install.
+
+## Combined source snapshot
+
+The single-contact ownership source and the conditional keymap sizing and
+resource-cleanup source are now combined in one uninstalled experimental source
+snapshot. An independent local review checked all 46 archived source files,
+confirmed only those two replacements, and reproduced both patch chains. Five
+author host-test methods and four independent source/scratch checks passed in
+normal and optimized Python. The host fixtures use fake Wayland and queued-file
+descriptor behavior, including negative controls for unresolved failures.
+
+The Omarchy Super key layout, icon-drawing source and theme color controls
+remain present in the source. That does not establish visible logo rendering,
+theme reload or keyboard typing. The combined source has not been built as a
+full application or tested with the real target Wayland library, compositor or
+iPad. Surface-loss and modifier-release issues remain, and the target library's
+file-descriptor ownership behavior is unverified. The snapshot is not ready to
+install, and no new physical touch or keyboard result is claimed.
