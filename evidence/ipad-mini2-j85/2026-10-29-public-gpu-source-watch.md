@@ -358,3 +358,12 @@ A public-source trace examined a possible split-display path in which a display-
 A separate candidate preserves a duplicate of the original descriptor for DMA-BUF import followed by same-type re-export. Independent source review checked the selected ownership and cleanup paths, and host fakes exercised descriptor handling. The complete changed Mesa source file also compiled into an unlinked AArch64 object, using Clang and a mixed set of saved headers and configuration. The successful compile used libdrm 2.4.134 headers with an older configuration reporting 2.4.125; it emitted two unsupported GCC-warning-option notices.
 
 These are conditional findings across sources from different projects, not a demonstrated compatible target build or observed iPad failure. The candidate does not cover newly allocated WSI buffers or cross-type exports and does not itself solve inter-context ordering or cache visibility. It has not been linked into an ICD, installed or tested on the iPad. J85 GPU identity, driver binding, firmware, initialization and acceleration remain unverified.
+
+
+### Native shader-build prerequisites
+
+A fresh ARM64 Linux Mesa cross-configuration now finds zlib 1.3 and libdrm 2.4.125 in an isolated sysroot and passes the saved pthread affinity link probe. It still stops at the required target LLVM configuration; macOS LLVM libraries cannot simply substitute for Linux ARM64 libraries. No target executable was run.
+
+Separately, a macOS ARM64 build of the Mesa 26.2.5 `vtn_bindgen2` helper succeeded. For one saved SPIR-V input, the helper generated C++ and header files byte-identical to previously saved outputs. A separate native build of saved SPIRV-Tools source produced its core, optimizer and linker archives; a host test assembled, linked, optimized and validated a small SPIR-V module. Independent reviews checked the saved results. The SPIRV-Tools source archives were checked for local consistency, not independently authenticated upstream in that build, and the build did not have an independently verified network sandbox.
+
+These are macOS host build tools, not an iPad graphics driver. The separate `mesa_clc` generator and compatible LLVM-to-SPIR-V translator remain unresolved. A complete fresh Mesa configuration, J85 GPU initialization, a GPU job and an accelerated frame remain unverified.
