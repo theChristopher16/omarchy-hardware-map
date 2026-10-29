@@ -183,6 +183,28 @@ Vulkan WSI alone does not provide Hyprland's OpenGL/EGL renderer. This ICD
 has not been tested with a Vulkan loader, the iPad's GPU, kernel or firmware.
 No Wayland presentation or accelerated frame is established.
 
+
+### Offline dependency lists and transfer cleanup
+
+Two reported device-free ARM64 Linux checks used an R12-derived dynamic linker
+to list the dependencies of separately built Mesa 26.2.5 PowerVR Vulkan ICDs,
+one without Wayland and one with Wayland. The saved Wayland list selects all
+11 non-interpreter libraries from a prepared bundle, including the Wayland
+client library and its `libffi` dependency. The non-Wayland run was reported
+to select its expected bundle; its raw output was not retained, so that listing
+could not be independently checked.
+
+Separately, a source-only candidate changes the [Mesa Services transfer
+submission error path](https://github.com/chaotic-cx/mesa-mirror/blob/ddaf85e353442d9d7f192fdcf1823e652e3f2ee3/src/imagination/vulkan/winsys/pvrsrvkm/pvr_arch_srv_job_transfer.c)
+to free a temporary heap allocation if duplicating a wait descriptor fails.
+Local host tests exercised that path with a fake GPU bridge, including a real
+host-side file-descriptor exhaustion case. The candidate has not been applied
+to the previously linked ICD or tested on the iPad.
+
+These checks do not establish Vulkan loader/ICD discovery, full relocation,
+Wayland presentation, GPU initialization or an accelerated frame. J85 GPU
+compatibility remains unverified.
+
 ### Public J85 platform-resource gap
 
 A bounded review of the published [J85 board source](https://github.com/Pauli1Go/HoolockLinux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/arch/arm64/boot/dts/apple/s5l8960x-j85.dts)
