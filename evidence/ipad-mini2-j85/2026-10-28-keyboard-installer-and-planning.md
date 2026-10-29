@@ -52,6 +52,17 @@ did not establish a graphical session, touchscreen or keyboard input, a GPU job
 or accelerated rendering, charging, or internal installation. It also did not
 prove complete descendant-process quiescence.
 
+
+A later configuration-only check bound a hash-pinned 325-byte minimal display
+Lua file read-only over the hash-verified R12 image in private RAM mount and
+network namespaces. On the iPad, Hyprland 0.56.2 ran `--verify-config` as
+root, returned 0 and reported `config ok`. Normal reverse cleanup of the
+bind and image mounts, loop and filesystem module succeeded; a separate
+same-boot postflight confirmed the stated resources were released. This checks
+that one configuration through the version's verification mode. It did not
+establish a desktop or window, seat or VT operation, touch or keyboard input,
+a GPU job or acceleration, charging, or internal installation.
+
 ## Input ownership review
 
 A subsequent offline review of a wvkbd source archive packaged with the
