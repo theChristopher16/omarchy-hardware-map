@@ -69,6 +69,12 @@ The separate [Mesa PowerVR support table](https://docs.mesa3d.org/drivers/powerv
 distinguishes revisions by BVNC and does not list G6430. A model-family name
 is not a measured GPU revision or proof of compatibility.
 
+## Series 6XT render precedent
+
+A [Linux GPU patch discussion](https://patchew.org/linux/20260728091804.382753-1-wenst@chromium.org/) reports Vulkan and Zink rendering on a MediaTek MT8173 Chromebook with a PowerVR GX6250, BVNC `4.40.2.51`, using Mesa 26.1.5 and a platform-specific Linux patch series. The author's benchmark logs show several scenes before the runs were interrupted. A second tester reported that a newer firmware build allowed several scenes to render before a later hang and kernel warning. These are external reports of experimental behavior, not a completed stability test.
+
+This Series 6XT GPU and its MediaTek power, clock and device-tree integration are not the iPad's established GPU or platform. [Mesa's support table](https://docs.mesa3d.org/drivers/powervr.html) lists that exact GX6250 revision as partial and warns that features and workarounds may be missing. The precedent does not identify J85's GPU, establish a compatible firmware license or ABI, or demonstrate an accelerated iPad frame.
+
 ## Upstream firmware-interface limits
 
 At [Linux commit `c339f401`](https://github.com/torvalds/linux/blob/c339f4010dea8b0d754f84ace70cd1b089878ef8/drivers/gpu/drm/imagination/pvr_device.c#L516-L540),
