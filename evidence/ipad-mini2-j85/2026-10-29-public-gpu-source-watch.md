@@ -399,3 +399,10 @@ This configuration remains headless, with Wayland and GLES disabled, and still n
 A later workspace-only staging run copied the new ICD, Gallium, EGL, GBM, GBM backend and ICD manifest into a separate private tree. Independent static inspection confirmed the six file contents, two contained relative library links and the unchanged source files. The two graphics libraries' build-tree `DT_RPATH` entries were removed from their copies; the output bytes matched the expected dynamic-section rewrites. The other four files remained byte-identical to their inputs. All five staged libraries are AArch64 shared objects with no RPATH or RUNPATH.
 
 A later check found newer change-time metadata on all six copies, while their content hashes and other checked identity fields still matched the saved result. The cause was not established. The manifest still names an absolute `/usr/local/lib` path, so this scratch tree is not a self-contained loader test or a deployable package. No library was loaded and no iPad or GPU test was performed.
+
+
+### Static relative-manifest specimen
+
+A separate two-file scratch specimen copies the PowerVR ICD and changes only its manifest's `library_path` to `../../../lib/libvulkan_powervr_mesa.so`. Independent static checks confirmed that the relative path resolves to the copied library inside that specimen root, with no symlinks or unexpected files. The copied ICD matches its source hash. The two output change-times later advanced, although their content hashes and other checked identity fields remained the same; the cause was not established.
+
+The [Vulkan Loader 1.3.275 documentation](https://github.com/KhronosGroup/Vulkan-Loader/blob/v1.3.275/docs/LoaderDriverInterface.md#driver-manifest-file-format) describes slash-containing relative library paths as relative to the manifest. The exact saved loader binary has not been shown to derive from that pinned source. No loader or ICD was executed, and this two-file specimen is not a complete runtime package or evidence of J85 GPU compatibility.
