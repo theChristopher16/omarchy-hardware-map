@@ -102,4 +102,4 @@ The newer ChromiumOS driver's [feature table](https://chromium.googlesource.com/
 has one observed device-feature row, labeled `4.0.2.51`. That profile is
 not an established match for the iPad mini 2. This partial comparison does not
 identify J85 or demonstrate compatible firmware, initialization, a GPU job,
-or an accelerated frame.
+or an accelerated frame. No GPU job was run for this comparison.
