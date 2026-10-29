@@ -129,3 +129,10 @@ full application or tested with the real target Wayland library, compositor or
 iPad. Surface-loss and modifier-release issues remain, and the target library's
 file-descriptor ownership behavior is unverified. The snapshot is not ready to
 install, and no new physical touch or keyboard result is claimed.
+
+
+## Later offline keyboard link and startup
+
+On 29 October, a newer, uninstalled keyboard candidate was linked as an AArch64 Linux executable in an isolated build. Static review checked its ELF architecture, direct dependencies, recorded link inputs and selected first-damage request sequence. A separate device-free version-only startup using saved R12 libraries printed `wvkbd-0.21` and exited successfully with empty stderr; this option returns before normal Wayland initialization.
+
+An earlier instrumented startup emitted dynamic symbol-lookup diagnostics despite exiting successfully, so later library fallback behavior remains unverified. Neither run used the iPad or a compositor. They do not establish visible keyboard rendering, touch typing, modifier and release behavior, theme reload, or installation.
