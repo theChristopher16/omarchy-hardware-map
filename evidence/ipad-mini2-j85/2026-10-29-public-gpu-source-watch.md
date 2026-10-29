@@ -283,4 +283,6 @@ A later isolated ARM64 build compiled the transfer-cleanup candidate with the Wa
 
 The desktop build was also staged into a separate private-prefix scratch tree. Its selected graphics libraries no longer carry build-tree RPATH or RUNPATH entries, and the Zink alias is relative. A separate static provider comparison found candidate names, versions and strong symbols for the checked dependency graph; that is not actual loader resolution or proof of the redirector's dynamically selected plugin path. The existing software-rendering fallback was not replaced.
 
+A subsequent isolated ARM64 dynamic-loader `--list` run against that newly linked Wayland ICD selected all 11 expected libraries from the staged R12-derived bundle and exited successfully. The temporary image and container were removed. This is a dependency-path listing; it does not establish full relocation, Vulkan loader/ICD negotiation or application behavior. The loader itself executed, and whether it suppressed every target initializer was not independently proven for that exact binary.
+
 These results do not establish the iPad's GPU revision, matching kernel interface or firmware, loader negotiation, Wayland presentation, a GPU job or an accelerated frame.
