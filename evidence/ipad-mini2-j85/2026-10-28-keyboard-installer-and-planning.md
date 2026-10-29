@@ -136,3 +136,10 @@ install, and no new physical touch or keyboard result is claimed.
 On 29 October, a newer, uninstalled keyboard candidate was linked as an AArch64 Linux executable in an isolated build. Static review checked its ELF architecture, direct dependencies, recorded link inputs and selected first-damage request sequence. A separate device-free version-only startup using saved R12 libraries printed `wvkbd-0.21` and exited successfully with empty stderr; this option returns before normal Wayland initialization.
 
 An earlier instrumented startup emitted dynamic symbol-lookup diagnostics despite exiting successfully, so later library fallback behavior remains unverified. Neither run used the iPad or a compositor. They do not establish visible keyboard rendering, touch typing, modifier and release behavior, theme reload, or installation.
+
+
+## Offline uppercase A-accent candidate
+
+A separate uninstalled keyboard source candidate adds eleven direct uppercase choices to the A-accent compose page using the existing unmodified Copy path. The prior safety gate still refuses Copy while a local modifier is held; Shift must be toggled off before using these choices. Host tests using fake drawing and transport exercised the labels, values, press and release handling, and Shift refusal. An independent source and geometry review reproduced the tests and checked hit testing at synthetic screen sizes.
+
+A fresh local cross-link produced an AArch64 Linux executable containing the new choices, but the linker emitted an SFrame error despite the runner taking its successful path. The result uses different startup inputs from an earlier successful build; its runtime and unwinding behavior remain unverified. The candidate has not been installed or run on the iPad. These host checks do not establish a usable on-screen layout, compositor acceptance, physical touch typing, XKB parsing, or actual text delivery.
