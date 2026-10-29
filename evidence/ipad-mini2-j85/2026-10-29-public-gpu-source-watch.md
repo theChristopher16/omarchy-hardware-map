@@ -502,3 +502,28 @@ existing cleanup attempts a synchronous runtime-PM put but ignores a failure
 from it, so physical power-off is not established. This candidate does not
 identify the iPad's GPU or clock, supply firmware, or establish an accelerated
 frame.
+
+
+### Follow-up: PowerVR-enabled scratch compilation
+
+A later local Clang 23 build compiled baseline and experimental PowerVR source
+files as AArch64 relocatable objects with `CONFIG_DRM_POWERVR=m`, using
+generated headers from the [public Hoolock kernel](https://github.com/HoolockLinux/linux/tree/6831bc701a6ce059e71e5aaa9488c9195bea6927).
+This was a direct translation-unit compile, not full Kbuild or a linked module.
+The saved builds produced warnings, including four untriaged default-const
+warnings in each `pvr_drv.c` variant.
+
+A first generic scratch configuration selected 52-bit virtual and physical
+addresses and pointer authentication. A later scratch configuration started
+from the saved runtime9 configuration, retained its 48-bit address settings
+and disabled pointer authentication, and was used for a separate direct
+compile. In the selected object comparison, the user-address limit changed
+from `1<<52` to `1<<48` and the generated per-task canary offset changed
+from 1344 to 1280. These are object/configuration observations, not evidence
+of the running iPad's offsets or ABI.
+
+The public Kconfig did not know four runtime9-specific PMGR worker options,
+and 45 serialized entries differed from the saved seed after configuration.
+The exact target configuration, source and toolchain needed for a compatible
+module are not established. These compiles did not link or load a PowerVR
+module or demonstrate GPU initialization, a job or an accelerated frame.
