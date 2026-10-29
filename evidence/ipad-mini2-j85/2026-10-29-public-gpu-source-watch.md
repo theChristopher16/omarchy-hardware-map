@@ -275,3 +275,12 @@ A separate offline ARM64 Mesa 26.2.5 build, configured for the PowerVR Services 
 The Gallium library requires `libLLVM.so.18.1`. A filename check of the saved R12 image found no matching entry at the exact `/usr/lib` path; a separate ARM64 LLVM 18 library candidate exists, but its dependencies and actual runtime compatibility remain unresolved. Some graphics libraries retain build-layout search paths, and the generated Zink link points into the build tree. They need packaging and relocation work before installation; file presence does not prove successful loading.
 
 This is an offline build and static file inspection. The iPad's GPU identity, compatible kernel driver and firmware, and GPU initialization remain unverified. The resulting stack has not been tested with the iPad GPU, and no accelerated frame or Wayland presentation has been demonstrated.
+
+
+### Scratch Wayland relink and desktop staging
+
+A later isolated ARM64 build compiled the transfer-cleanup candidate with the Wayland configuration and linked it into a separate Wayland-enabled PowerVR Vulkan ICD. Independent static inspection found the expected Wayland WSI functions and Vulkan ICD exports. The transfer function matched the new object at 1,336 bytes outside 180 excluded relocation bytes; the excluded bytes and their targets remain unverified. Its ordered direct dependencies and dynamic-symbol metadata matched the earlier Wayland ICD. This scratch link is separate from the Zink desktop build above and has not been loaded or installed on the iPad.
+
+The desktop build was also staged into a separate private-prefix scratch tree. Its selected graphics libraries no longer carry build-tree RPATH or RUNPATH entries, and the Zink alias is relative. A separate static provider comparison found candidate names, versions and strong symbols for the checked dependency graph; that is not actual loader resolution or proof of the redirector's dynamically selected plugin path. The existing software-rendering fallback was not replaced.
+
+These results do not establish the iPad's GPU revision, matching kernel interface or firmware, loader negotiation, Wayland presentation, a GPU job or an accelerated frame.
