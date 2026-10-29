@@ -392,3 +392,10 @@ A fresh Mesa 26.2.5 ARM64 cross-build combined four previously reviewed Services
 The four changed sources produced distinct ARM64 objects. The saved build graph, archive membership and final symbols support their inclusion in the ICD, although no link map was recorded to prove every instruction's provenance. The changes are compile/link candidates, not proof that the cleanup paths work against a real kernel. The build was expected to remain offline, but did not have an independently enforced network sandbox.
 
 This configuration remains headless, with Wayland and GLES disabled, and still needs packaging. It was not installed or executed on the iPad. The J85 GPU revision, compatible kernel interface and firmware, actual GPU submission, display presentation and an accelerated frame remain unverified.
+
+
+### Four-fix scratch staging
+
+A later workspace-only staging run copied the new ICD, Gallium, EGL, GBM, GBM backend and ICD manifest into a separate private tree. Independent static inspection confirmed the six file contents, two contained relative library links and the unchanged source files. The two graphics libraries' build-tree `DT_RPATH` entries were removed from their copies; the output bytes matched the expected dynamic-section rewrites. The other four files remained byte-identical to their inputs. All five staged libraries are AArch64 shared objects with no RPATH or RUNPATH.
+
+A later check found newer change-time metadata on all six copies, while their content hashes and other checked identity fields still matched the saved result. The cause was not established. The manifest still names an absolute `/usr/local/lib` path, so this scratch tree is not a self-contained loader test or a deployable package. No library was loaded and no iPad or GPU test was performed.
