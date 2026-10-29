@@ -64,3 +64,14 @@ file-descriptor and mapping leak after successful uploads; the size candidate
 does not fix that leak. These tests did not perform a full XKB parse, run a
 compositor, build the ARM64 application or access the iPad. The candidate has
 not been installed; its detailed local test artifacts are not included here.
+
+A separate, uninstalled cleanup successor attempts to release the local
+mapping, original file descriptor and formatted buffer after the keymap
+request. Five author host methods and 63 independent scenario/map cases
+passed in normal and optimized Python using fake transport; some negative
+controls deliberately reproduced missing or misdirected requests. The
+successor assumes the target libwayland duplicates the file descriptor during
+marshalling. Public source for two libwayland revisions does so, but the
+iPad's actual runtime library and the source-to-binary relationship have not
+been verified. A queued request is not proof of compositor delivery. The
+cleanup candidate is not ready to install.
