@@ -81,3 +81,25 @@ Some feature names have counterparts in the [current Linux schema](https://githu
 but other values remain unresolved. Similar field names do not prove
 command, firmware, ABI or platform compatibility; the Intel example does not
 identify the iPad's GPU.
+
+## Services 1.17 partial comparison
+
+An offline comparison of the public [ChromiumOS Services 1.17 kernel
+headers](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/common_srvcore_bridge.h)
+and a [Mesa Services header from a non-official mirror](https://github.com/chaotic-cx/mesa-mirror/blob/5f31557bb1a51004a8bbac397af99fd6a2cbb59a/src/imagination/vulkan/winsys/pvrsrvkm/pvr_srv_bridge.h)
+found matching CONNECT field order and 42 sampled bridge group/function
+indices. Their build revisions differ, and effective build options, including
+PDUMP, can affect whether CONNECT is accepted.
+
+A separate freestanding AArch64 compile checked the sampled layouts and
+offsets in a manually transcribed fixture; independent checks also compiled
+public declaration fragments with synthetic shims. Packing and synthetic enum
+negative controls failed as expected. These checks use one compiler target,
+not the actual paired Linux builds or a live ioctl, and do not establish the
+full ABI or firmware compatibility.
+
+The newer ChromiumOS driver's [feature table](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/km/rgx_bvnc_table_km.h)
+has one observed device-feature row, labeled `4.0.2.51`. That profile is
+not an established match for the iPad mini 2. This partial comparison does not
+identify J85 or demonstrate compatible firmware, initialization, a GPU job,
+or an accelerated frame.
