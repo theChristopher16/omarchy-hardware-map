@@ -366,4 +366,13 @@ A fresh ARM64 Linux Mesa cross-configuration now finds zlib 1.3 and libdrm 2.4.1
 
 Separately, a macOS ARM64 build of the Mesa 26.2.5 `vtn_bindgen2` helper succeeded. For one saved SPIR-V input, the helper generated C++ and header files byte-identical to previously saved outputs. A separate native build of saved SPIRV-Tools source produced its core, optimizer and linker archives; a host test assembled, linked, optimized and validated a small SPIR-V module. Independent reviews checked the saved results. The SPIRV-Tools source archives were checked for local consistency, not independently authenticated upstream in that build, and the build did not have an independently verified network sandbox.
 
-These are macOS host build tools, not an iPad graphics driver. The separate `mesa_clc` generator and compatible LLVM-to-SPIR-V translator remain unresolved. A complete fresh Mesa configuration, J85 GPU initialization, a GPU job and an accelerated frame remain unverified.
+These were macOS host build tools, not an iPad graphics driver. At that stage, the separate `mesa_clc` generator, a compatible LLVM-to-SPIR-V translator and a complete fresh Mesa configuration were unresolved. J85 GPU initialization, a GPU job and an accelerated frame remain unverified.
+
+
+### Fresh ARM64 Mesa build with native generators
+
+A subsequent workspace-only build produced a macOS-native LLVM-to-SPIR-V translator and Mesa `mesa_clc` and `pco_clc` helpers. A small OpenCL shader compiled by `mesa_clc` produced SPIR-V that a separately built host validator accepted; malformed and corrupt controls failed as expected. The `pco_clc` test used its generic COMMON target, not an identified iPad GPU revision.
+
+Using those helpers, a verified private Bison and an Ubuntu ARM64 sysroot, a fresh Mesa 26.2.5 configuration for the PowerVR Services Vulkan driver and Zink completed all 1,205 build steps. Independent static inspection identified five AArch64 shared objects, including the PowerVR Vulkan ICD, Gallium, EGL, GBM and the GBM backend. Earlier failed builds and their dependency corrections were preserved. The ICD's recorded symbol requirements include GLIBC_2.38; target dependency closure has not been tested.
+
+This is an intermediate build with Wayland, GLES and llvmpipe disabled. EGL and the GBM backend retain build-tree-relative search paths. The outputs have not been packaged, installed or dynamically loaded on the iPad. They do not establish a compatible J85 kernel driver or firmware, GPU initialization, hardware acceleration, a rendered frame, or an Omarchy desktop.
