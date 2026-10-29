@@ -56,6 +56,28 @@ not prove that the physical route is absent. Whether the iPad's GPU uses the
 driver is unverified. The PR is a conditional source lead, not evidence of
 working J85 GPU DMA, a compatible driver or an accelerated frame.
 
+### Follow-up: Orchard's layered DART changes
+
+A later check on 29 October found that [OrchardLinux/linux PR #1 was
+closed](https://github.com/OrchardLinux/linux/pull/1) after its maintainers
+incorporated related changes in Orchard's hardware patch layer. The
+[Apple-4K series](https://github.com/OrchardLinux/hardware/blob/ae1457edee7d2e52213e4d979aee02dbbeb90ce0/kernel/series/apple-4k)
+describes A7, A8 and A8X; it includes
+[S5L8960X page-table changes](https://github.com/OrchardLinux/hardware/blob/ae1457edee7d2e52213e4d979aee02dbbeb90ce0/kernel/patches/drivers/iommu/0002-iommu-io-pgtable-dart-Add-a-quirk-for-S5L8960X-table.patch)
+and a [stream-control lock](https://github.com/OrchardLinux/hardware/commit/f82f35a396d314bd815a2f44e01727993e30cc21).
+A maintainer reports iPad 6 Wi-Fi and NVMe tests for the latter; those are
+A10 peripheral observations, not J85 GPU tests. The lock applies to a
+layered source tree and is not established as a standalone patch against the
+pinned Hoolock base.
+
+The public [J85 device tree](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/arch/arm64/boot/dts/apple/s5l8960x-j85.dts#L9-L13)
+uses `apple,s5l8960x` as a board SoC compatible; the driver's
+`apple,s5l8960x-dart` is a separate IOMMU-node match. A bounded inspection of
+the pinned board include closure did not identify an `iommus` property or a
+GPU-labelled node. That is not proof the physical mapping is absent. The
+upstream changes do not establish J85 GPU DMA, compatible firmware, or an
+accelerated frame.
+
 ## Historical G6430 conformance
 
 A [2014 Khronos conformance entry](https://www.khronos.org/conformance/adopters/conformant-products/opengles)
