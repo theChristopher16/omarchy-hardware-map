@@ -342,3 +342,10 @@ Selected GCC and C-runtime startup files and all ordinary members of the three S
 Separately, a syntax check of saved generated Mesa NIR source found that two GCC-detected overflow-builtin defines are invalid for the tested Clang compiler. Mesa's configuration has compiler-feature detection for those defines, so a fresh configuration is required for a coherent Clang build. These checks do not establish a compatible J85 driver, firmware, GPU job, or rendered frame.
 
 A subsequent standalone Clang 23 check compiled Mesa's SPIR-V member expression against selected headers from the verified Ubuntu arm64 packages; a deliberately nonexistent member failed as expected. Independent inspection matched the staged headers to their package members and checked the generated ARM64 object and dependencies. This is a compile-only expression check, not a full Meson configuration, GCC ABI comparison, ICD link, or GPU test.
+
+
+### AArch64 SPIR-V link prerequisite
+
+A later workspace-only experiment used selected files from authenticated Ubuntu arm64 development and runtime packages to compile a small caller and link an AArch64 shared library against a SPIR-V Tools archive. A control without the C++ runtime failed with the expected missing-symbol errors; the corresponding link with the runtime succeeded. An independent postflight checked the saved commands, staged inputs, link traces and map, ELF metadata and dynamic dependency names. The output has SHA-256 `bd914a0fafe091a9ffa8a5e11cbc7170c19d96619f43f31981061f2f0ebc2bb8`.
+
+This is a small static link check, not a full fresh Mesa build, a Vulkan ICD, dynamic-loader execution or proof of compatibility with the iPad. It does not establish GPU initialization, a GPU job or an accelerated frame.
