@@ -299,3 +299,10 @@ These results do not establish the iPad's GPU revision, matching kernel interfac
 On 29 October, two previously reviewed Mesa Services error-path changes were linked together into a new scratch AArch64 Wayland Vulkan ICD. One cleans up a temporary allocation if a wait-descriptor duplication fails; the other cleans up resources when an unsupported GPU profile is rejected. Independent static inspection checked the expected function regions outside relocation words, link-map entries and selected dynamic symbols. The earlier ICDs were preserved.
 
 This is an offline userspace build, not a new GPU device profile or a compatible J85 kernel driver. The library was not loaded on the iPad, and no GPU initialization, job, presented image or accelerated frame was demonstrated. Its build receipt has a runner-hash attribution limitation; it should not be treated as complete runtime provenance.
+
+
+### Original-header ARM64 bridge comparison
+
+A later offline AArch64 compile compared the actual saved Mesa and ChromiumOS Services headers for 35 sampled synchronization, memory and compute structures. The paired structure sizes and alignments, 102 sampled field offsets and widths, and 11 selected pointed-to element widths matched in that hybrid build environment. The checked kernel release and debug configurations had different annotation-length limits; Mesa's examined fixed 23-byte annotation fits both. The sync-allocation input declarations also remain different: one side has a placeholder while Mesa supplies an empty input.
+
+These are sampled source-layout results, not proof of identical command semantics, complete ABI compatibility, actual ioctl behavior, firmware compatibility or a working J85 GPU. The comparison used saved public headers with a hybrid build configuration; it did not run on the iPad or submit a GPU job.
