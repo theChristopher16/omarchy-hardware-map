@@ -9,7 +9,7 @@ not loaded. Those observations and their limits are described in the
 
 An R12 desktop image includes a keyboard recovery change. Its offline file
 round trip and a separate comparison of contents, ownership, modes and link
-structure passed. The image has not been booted or tested on the iPad, and
+structure passed. The image has not been launched as a desktop on the iPad;
 physical typing and keyboard recovery remain unverified.
 
 An independent offline review of the legacy keyboard installer found that
@@ -26,6 +26,10 @@ It is not an installer or evidence that the keyboard is ready to deploy.
 The detailed installer and planner review artifacts are not included with
 this note. These are reported offline findings; no new physical touch or
 keyboard result is claimed.
+
+## Later R12 image read on the iPad
+
+On 29 October 2026 UTC, the full R12 image was transferred into RAM on the iPad, verified by hash, and mounted read-only in a private namespace. The keyboard controller and a software graphics backend file were read and their hashes matched the saved image. The temporary mount, loop device and filesystem module were removed cleanly, and the image was deleted from RAM. This checks image access and decompression; it does not establish a desktop launch, physical keyboard typing, touchscreen activation, GPU acceleration or an internal installation.
 
 ## Input ownership review
 
