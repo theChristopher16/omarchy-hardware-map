@@ -158,6 +158,41 @@ The link does not establish loader operation, kernel or firmware
 compatibility, GPU execution, display presentation or an accelerated frame.
 The ICD has not been tested on the iPad.
 
+
+### R12 archive comparison and separate Wayland build
+
+An independently reviewed static comparison between the earlier non-Wayland
+ICD and a saved R12 image found candidates for the ICD's ten named direct
+libraries and their recorded version labels. The image's libc exports the four
+`GLIBC_2.38` symbol/version pairs that ICD requires. This does not establish
+what the iPad would load or prove relocation. A name-only image scan found no
+conventional Vulkan loader or ICD manifest filenames; differently named code
+or later runtime mounts were not ruled out.
+
+A separate offline ARM64 Mesa 26.2.5 configuration enabled Services and
+Vulkan Wayland WSI. Its build succeeded and linked an AArch64 PowerVR Vulkan
+ICD; independent inspection found Wayland and Services functions retained in
+the file. The build produced two helper-source warnings about ignored `fread`
+results. Two Wayland function probes returned `NO`; the source contains
+fallback paths whose runtime behavior is untested.
+
+The R12 library comparison above applies to the earlier non-Wayland ICD, not
+this new Wayland build. The Wayland ICD depends on `libwayland-client.so.0`,
+whose availability and compatibility on the target have not been established.
+Vulkan WSI alone does not provide Hyprland's OpenGL/EGL renderer. This ICD
+has not been tested with a Vulkan loader, the iPad's GPU, kernel or firmware.
+No Wayland presentation or accelerated frame is established.
+
+### Public J85 platform-resource gap
+
+A bounded review of the published [J85 board source](https://github.com/Pauli1Go/HoolockLinux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/arch/arm64/boot/dts/apple/s5l8960x-j85.dts)
+and its checked include closure found no GPU-named node or `img,img-rogue`
+compatible in that selected source. The [native PowerVR binding](https://github.com/Pauli1Go/HoolockLinux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/Documentation/devicetree/bindings/gpu/img%2Cpowervr-rogue.yaml)
+requires a compatible, register resource, clocks and interrupt. These are
+source-integration gaps to investigate; the search does not rule out an
+unrecognized node, other configurations or bootloader changes, and it does
+not identify the physical GPU or its resources.
+
 ## Services 1.17 partial comparison
 
 An offline comparison of the public [ChromiumOS Services 1.17 kernel
