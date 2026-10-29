@@ -33,6 +33,14 @@ On 29 October 2026 UTC, the full R12 image was transferred into RAM on the iPad,
 
 A second test at 03:19 UTC mounted the same hash-verified RAM image read-only with execution enabled inside private mount and network namespaces. The program `/usr/bin/true`, its loader and libc were hash-checked; this one minimal dynamically linked program ran successfully as root. The temporary mount, loop device, filesystem module and image were removed cleanly. This does not establish a desktop launch, a non-root privilege drop, touch or keyboard interaction, GPU acceleration, or internal installation.
 
+A further 29 October test ran `foot --version` as root from the hash-verified
+R12 image mounted read-only in private RAM namespaces. It printed the expected
+Foot 1.28.0 version line and exited successfully. Normal unmount, loop detach,
+filesystem-module unload and cleanup succeeded; a separate same-boot
+postflight confirmed the stated resources were released. This version-mode
+check did not show a terminal window or establish process-tree quiescence,
+keyboard or touch operation, GPU acceleration, charging or internal installation.
+
 ## Input ownership review
 
 A subsequent offline review of a wvkbd source archive packaged with the
