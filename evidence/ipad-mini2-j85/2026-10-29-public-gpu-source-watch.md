@@ -1,8 +1,27 @@
 # iPad mini 2 GPU: public-source watch
 
-29 October 2026 UTC. This note describes public sources, not a new test on the
-iPad mini 2. Its GPU identity, Linux driver compatibility and accelerated
-rendering remain unverified.
+29 October 2026 UTC. This note records public-source research and a limited
+RAM-boot module inventory. The iPad mini 2's GPU identity, Linux driver
+compatibility and accelerated rendering remain unverified.
+
+## Runtime9 module inventory
+
+At approximately 04:14 UTC on 29 October, the saved runtime9 kernel
+configuration specified `CONFIG_DRM_POWERVR=m`. A read-only comparison found
+seven named lab source files matched the [public Hoolock base at commit
+`6831bc70`](https://github.com/HoolockLinux/linux/tree/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination):
+`pvr_device.c`, `pvr_device_info.c`, `pvr_device_info.h`, `pvr_fw.c`,
+`pvr_drv.c`, `pvr_queue.c`, and the public DRM UAPI header
+[`pvr_drm.h`](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/include/uapi/drm/pvr_drm.h).
+The seven-file match does not establish the entire build tree or its contents
+at build time. The base [Kconfig](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination/Kconfig)
+names the module `powervr` when configured as a module.
+
+A separate read-only inventory of that RAM boot found a generic `powervr.ko`
+file present and the PowerVR module not loaded. No GPU module was loaded for
+the check. File presence and the build option do not establish J85 GPU
+identity, a compatible binding or firmware, GPU initialization or accelerated
+rendering. The observations are point-in-time evidence, not a GPU test.
 
 ## OrchardLinux DART draft
 
