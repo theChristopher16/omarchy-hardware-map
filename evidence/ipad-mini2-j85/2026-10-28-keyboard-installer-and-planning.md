@@ -41,6 +41,17 @@ postflight confirmed the stated resources were released. This version-mode
 check did not show a terminal window or establish process-tree quiescence,
 keyboard or touch operation, GPU acceleration, charging or internal installation.
 
+
+A subsequent 29 October version-only check ran the hash-checked R12
+`Hyprland --version` executable on the iPad from a hash-verified, read-only RAM
+image in private mount and network namespaces. It ran as root with
+no-new-privileges, reported Hyprland 0.56.2 and exited successfully. Normal
+unmount, loop detach, filesystem-module unload and cleanup succeeded; a separate
+same-boot postflight verified the stated resources were released. This check
+did not establish a graphical session, touchscreen or keyboard input, a GPU job
+or accelerated rendering, charging, or internal installation. It also did not
+prove complete descendant-process quiescence.
+
 ## Input ownership review
 
 A subsequent offline review of a wvkbd source archive packaged with the
