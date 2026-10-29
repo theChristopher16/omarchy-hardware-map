@@ -23,6 +23,22 @@ the check. File presence and the build option do not establish J85 GPU
 identity, a compatible binding or firmware, GPU initialization or accelerated
 rendering. The observations are point-in-time evidence, not a GPU test.
 
+
+### Static module metadata
+
+A later same-boot SHA-256 comparison found that the iPad's unloaded
+`powervr.ko` file matched the existing lab module. Static `modinfo` on the
+lab file listed device-tree aliases for `thead,th1520-gpu`, `img,img-rogue`
+and `img,img-axe`, and firmware names `powervr/rogue_36.53.104.796_v1.fw`,
+`powervr/rogue_36.52.104.182_v1.fw` and
+`powervr/rogue_33.15.11.3_v1.fw`.
+
+These are module metadata, not evidence that any named firmware file is
+present or suitable, that a J85 device-tree node matches, or that the iPad's
+GPU identity or GPU support has been established. The file comparison does not
+prove the module's compile-time source tree. The module was not loaded or
+probed for this check.
+
 ## OrchardLinux DART draft
 
 [OrchardLinux/linux draft PR #1](https://github.com/OrchardLinux/linux/pull/1)
