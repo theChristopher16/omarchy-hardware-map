@@ -129,6 +129,21 @@ firmware remain unverified, as do GPU initialization and an accelerated frame.
 Compiling the prepared Services changes alone would not supply a compatible
 kernel device; no ioctl or GPU job was run for this comparison.
 
+
+## Offline Mesa Services object build
+
+On 29 October, an offline ARM64 Linux build of Mesa 26.2.5 with its
+Services winsys enabled compiled three patched PowerVR Rogue source files
+for compute, render and transfer submission. Independent review matched the
+saved build log and the three outputs, identifying each output as an AArch64
+relocatable object. The build completed successfully; two separate helper
+sources produced warnings about ignored `fread` return values.
+
+This verifies object compilation only. It did not produce a final linked
+Vulkan ICD or test a kernel Services interface, firmware, the iPad or a GPU.
+It does not establish this iPad's GPU identity, a compatible driver or an
+accelerated frame.
+
 ## Services 1.17 partial comparison
 
 An offline comparison of the public [ChromiumOS Services 1.17 kernel
