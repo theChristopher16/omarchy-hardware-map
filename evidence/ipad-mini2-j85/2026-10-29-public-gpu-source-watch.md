@@ -292,3 +292,10 @@ The desktop build was also staged into a separate private-prefix scratch tree. I
 A subsequent isolated ARM64 dynamic-loader `--list` run against that newly linked Wayland ICD selected all 11 expected libraries from the staged R12-derived bundle and exited successfully. The temporary image and container were removed. This is a dependency-path listing; it does not establish full relocation, Vulkan loader/ICD negotiation or application behavior. The loader itself executed, and whether it suppressed every target initializer was not independently proven for that exact binary.
 
 These results do not establish the iPad's GPU revision, matching kernel interface or firmware, loader negotiation, Wayland presentation, a GPU job or an accelerated frame.
+
+
+### Combined offline Wayland relink
+
+On 29 October, two previously reviewed Mesa Services error-path changes were linked together into a new scratch AArch64 Wayland Vulkan ICD. One cleans up a temporary allocation if a wait-descriptor duplication fails; the other cleans up resources when an unsupported GPU profile is rejected. Independent static inspection checked the expected function regions outside relocation words, link-map entries and selected dynamic symbols. The earlier ICDs were preserved.
+
+This is an offline userspace build, not a new GPU device profile or a compatible J85 kernel driver. The library was not loaded on the iPad, and no GPU initialization, job, presented image or accelerated frame was demonstrated. Its build receipt has a runner-hash attribution limitation; it should not be treated as complete runtime provenance.
