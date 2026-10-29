@@ -198,10 +198,14 @@ Separately, a source-only candidate changes the [Mesa Services transfer
 submission error path](https://github.com/chaotic-cx/mesa-mirror/blob/ddaf85e353442d9d7f192fdcf1823e652e3f2ee3/src/imagination/vulkan/winsys/pvrsrvkm/pvr_arch_srv_job_transfer.c)
 to free a temporary heap allocation if duplicating a wait descriptor fails.
 Local host tests exercised that path with a fake GPU bridge, including a real
-host-side file-descriptor exhaustion case. The complete modified Mesa source
-file was subsequently compiled into an ARM64 relocatable object in an isolated
-build. The candidate has not been linked into the previously built ICD or
-tested on the iPad.
+host-side file-descriptor exhaustion case. The modified Mesa source file was
+compiled into an ARM64 relocatable object and linked into a separate non-Wayland
+ICD in an isolated build. An independent static comparison matched 1,336
+function bytes while excluding 180 relocation bytes; it also found the expected
+Vulkan exports and conditional cleanup branch. The scratch ICD's staged library
+dependencies were listed by an ARM64 dynamic linker. These checks do not validate
+the excluded bytes, complete ABI, ICD initialization or iPad behavior. The
+existing ICD was not replaced, and the scratch ICD was not tested on the iPad.
 
 These checks do not establish Vulkan loader/ICD discovery, full relocation,
 Wayland presentation, GPU initialization or an accelerated frame. J85 GPU
