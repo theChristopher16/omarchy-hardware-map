@@ -441,3 +441,23 @@ A tester separately [reported the corresponding hang](https://lists.infradead.or
 
 
 A follow-up public-source review checked why merely deferring the unplug is not yet a complete fix. The pinned [reset error path](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination/pvr_power.c#L594-L605) can restart stopped queues after marking the device lost, and the [MMU-operation cleanup](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination/pvr_mmu.c#L2285-L2310) ignores a flush return before releasing page-table backing. An independent review confirmed these source-order observations. They identify a need to account for admission, worker lifetime and DMA quiescence; they do not prove actual post-loss DMA or a failure on the iPad. No patch or device test was performed.
+
+
+### Exploratory submission guard after device loss
+
+A separate, uninstalled source candidate checks the existing device-loss flag
+after entering the [PowerVR submission ioctl](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination/pvr_drv.c#L1146-L1165).
+If that read observes loss, it returns an error before starting a new job.
+Single-threaded host tests of the extracted source functions exercised that
+branch; a control showed that loss occurring after the check can still allow
+the submission. The candidate is not a synchronized admission barrier and
+does not fix the reset/unplug deadlock, stop queued jobs, or establish DMA
+quiescence.
+
+The baseline and candidate versions of two complete PowerVR source files were
+also compiled offline into AArch64 relocatable objects. This was a manually
+assembled Clang compile against a GCC-generated configuration in which
+PowerVR was disabled, with warnings in both versions. It was not a
+PowerVR-enabled Kbuild, linked kernel module, device test, or proof of target
+ABI compatibility. No J85 driver binding, GPU initialization, GPU job, or
+accelerated frame was established.
