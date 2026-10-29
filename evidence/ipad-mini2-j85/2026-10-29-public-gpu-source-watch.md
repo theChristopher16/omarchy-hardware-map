@@ -139,10 +139,24 @@ saved build log and the three outputs, identifying each output as an AArch64
 relocatable object. The build completed successfully; two separate helper
 sources produced warnings about ignored `fread` return values.
 
-This verifies object compilation only. It did not produce a final linked
+That earlier stage verified object compilation only. It did not itself link a
 Vulkan ICD or test a kernel Services interface, firmware, the iPad or a GPU.
 It does not establish this iPad's GPU identity, a compatible driver or an
 accelerated frame.
+
+
+### Subsequent offline ICD link
+
+A later offline ARM64 build of Mesa 26.2.5 with Services enabled successfully
+linked an AArch64 PowerVR Vulkan ICD shared object. Independent inspection
+checked the saved build result and linked artifact. The build had no
+configured Wayland Vulkan window-system platform or OpenGL ES stack.
+The linked file requires dynamic libraries and includes `GLIBC_2.38` among
+its symbol-version requirements; availability on the iPad is unverified.
+
+The link does not establish loader operation, kernel or firmware
+compatibility, GPU execution, display presentation or an accelerated frame.
+The ICD has not been tested on the iPad.
 
 ## Services 1.17 partial comparison
 
