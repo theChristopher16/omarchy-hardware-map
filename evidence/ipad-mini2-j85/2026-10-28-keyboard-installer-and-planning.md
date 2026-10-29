@@ -31,6 +31,8 @@ keyboard result is claimed.
 
 On 29 October 2026 UTC, the full R12 image was transferred into RAM on the iPad, verified by hash, and mounted read-only in a private namespace. The keyboard controller and a software graphics backend file were read and their hashes matched the saved image. The temporary mount, loop device and filesystem module were removed cleanly, and the image was deleted from RAM. This checks image access and decompression; it does not establish a desktop launch, physical keyboard typing, touchscreen activation, GPU acceleration or an internal installation.
 
+A second test at 03:19 UTC mounted the same hash-verified RAM image read-only with execution enabled inside private mount and network namespaces. The program `/usr/bin/true`, its loader and libc were hash-checked; this one minimal dynamically linked program ran successfully as root. The temporary mount, loop device, filesystem module and image were removed cleanly. This does not establish a desktop launch, a non-root privilege drop, touch or keyboard interaction, GPU acceleration, or internal installation.
+
 ## Input ownership review
 
 A subsequent offline review of a wvkbd source archive packaged with the
