@@ -143,3 +143,10 @@ An earlier instrumented startup emitted dynamic symbol-lookup diagnostics despit
 A separate uninstalled keyboard source candidate adds eleven direct uppercase choices to the A-accent compose page using the existing unmodified Copy path. The prior safety gate still refuses Copy while a local modifier is held; Shift must be toggled off before using these choices. Host tests using fake drawing and transport exercised the labels, values, press and release handling, and Shift refusal. An independent source and geometry review reproduced the tests and checked hit testing at synthetic screen sizes.
 
 A fresh local cross-link produced an AArch64 Linux executable containing the new choices, but the linker emitted an SFrame error despite the runner taking its successful path. The result uses different startup inputs from an earlier successful build; its runtime and unwinding behavior remain unverified. The candidate has not been installed or run on the iPad. These host checks do not establish a usable on-screen layout, compositor acceptance, physical touch typing, XKB parsing, or actual text delivery.
+
+
+### Newer-linker comparison
+
+A subsequent workspace-only build produced a macOS-native GNU binutils 2.46.1 AArch64 Linux linker. Its source archive matched published Gentoo package digests, but its detached GNU signature remains unverified. The host-tool build completed with several retained configuration and compiler warnings. GNU's small AArch64 SFrame v3 fixture and a discard control passed; no generated Linux file was executed.
+
+The uppercase-accent keyboard was then relinked separately with the new linker using the same recorded application objects and libraries as the earlier attempt. The recorded link exited zero with empty stderr, and the earlier SFrame diagnostic did not recur. Independent static review confirmed the linked uppercase layout choices, matching dependency and import records, and SFrame v3 data. The binary remains uninstalled and unexecuted; loader behavior, unwinding, compositor acceptance, physical touch and text delivery remain unverified.
