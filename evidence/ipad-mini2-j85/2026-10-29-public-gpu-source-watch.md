@@ -114,6 +114,31 @@ negative controls failed as expected. These checks use one compiler target,
 not the actual paired Linux builds or a live ioctl, and do not establish the
 full ABI or firmware compatibility.
 
+
+A further independently reviewed public-source comparison sampled 13
+Services 1.17 commands spanning synchronization, memory allocation and
+mapping, compute-context creation and compute submission. Across the
+[Mesa Services bridge header](https://github.com/chaotic-cx/mesa-mirror/blob/5f31557bb1a51004a8bbac397af99fd6a2cbb59a/src/imagination/vulkan/winsys/pvrsrvkm/pvr_srv_bridge.h)
+and ChromiumOS's pinned [synchronization](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/common_sync_bridge.h),
+[memory](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/common_mm_bridge.h)
+and [compute](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/common_rgxcmp_bridge.h)
+declarations, the sampled group/function numbers and corresponding ordered
+outer fields aligned by role. The review covered 25 input/output structure
+pairs, but did not establish that the sampled commands are sufficient for a
+working system.
+
+The declarations are not identical: one context selector is Mesa
+`uint32_t` versus ChromiumOS `IMG_BOOL`, whose actual ABI width remains to
+be checked. For sync-block allocation, Mesa passes a null input and zero size
+while the ChromiumOS declaration has an empty-input placeholder; the
+[generated handler](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/server_sync_bridge.c)
+does not dereference that placeholder, but the generic dispatcher still takes
+a zero-length copy path. This does not prove an ioctl succeeds. Layout and
+offset checks for the larger sampled structures, pointed-to arrays, build
+options, command contents, firmware compatibility and target runtime behavior
+remain open. This source comparison does not identify the iPad's GPU or
+establish a GPU job or accelerated frame.
+
 The newer ChromiumOS driver's [feature table](https://chromium.googlesource.com/chromiumos/third_party/kernel/+/f66be639e83bf9b6fe6e57d5fc84029958022f3c/drivers/gpu/drm/img-rogue/1.17/km/rgx_bvnc_table_km.h)
 has one observed device-feature row, labeled `4.0.2.51`. That profile is
 not an established match for the iPad mini 2. This partial comparison does not
