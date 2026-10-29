@@ -461,3 +461,22 @@ PowerVR was disabled, with warnings in both versions. It was not a
 PowerVR-enabled Kbuild, linked kernel module, device test, or proof of target
 ABI compatibility. No J85 driver binding, GPU initialization, GPU job, or
 accelerated frame was established.
+
+
+### Exploratory initial clock-rate guard
+
+A separate, uninstalled PowerVR source candidate samples the core clock after
+successful runtime-PM acquisition and rejects a zero rate or one too large
+for the firmware's 32-bit field before mapping GPU registers. Local fake-PM
+and clock controls exercised the actual extracted initialization function;
+the full baseline and modified source files also compiled to AArch64 objects
+with a manually assembled Clang command and a PowerVR-disabled configuration.
+No PVR-enabled kernel build or device test followed.
+
+The check covers only that initial sample: later firmware initializers still
+read the clock separately, and reset handling is unchanged. A provider that
+temporarily cannot report a valid rate could newly fail initialization. The
+existing cleanup attempts a synchronous runtime-PM put but ignores a failure
+from it, so physical power-off is not established. This candidate does not
+identify the iPad's GPU or clock, supply firmware, or establish an accelerated
+frame.
