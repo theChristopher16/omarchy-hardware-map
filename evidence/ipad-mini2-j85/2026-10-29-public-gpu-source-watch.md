@@ -313,3 +313,15 @@ These are sampled source-layout results, not proof of identical command semantic
 On 29 October, Orchard's hardware layer added an [apple-4k kernel configuration](https://github.com/OrchardLinux/hardware/commit/b036485d09d4e81ec91a8fc341c2a7ae95f2da28) for A7, A8 and A8X and reports a clean build. It also integrated an [S5L8960X DART stream-control lock](https://github.com/OrchardLinux/hardware/commit/24cd27b345e1ae5332a845b3b392687d3d7b0b57), crediting the earlier OrchardLinux/linux PR #1; that PR was closed without being merged. These are public source/build developments, not a J85 GPU result.
 
 The [Omarchy A README](https://github.com/OrchardLinux/omarchy-a/blob/5a44b36986165775588ea6802e987cfb44bfec91/README.md) still lists only the iPad 6 Wi-Fi as an experimental installation target and states that GPU acceleration is unavailable. Whether a J85 GPU uses DART and whether either update helps its graphics path remain unverified.
+
+### Combined ICD dependency and fence checks
+
+A later isolated ARM64 dynamic-linker dependency listing used the combined Wayland ICD described above, rather than the earlier transfer-only artifact. The saved R12 loader exited successfully and listed its 11 named dependencies in the staged bundle. This checks dependency paths, not complete relocation, Vulkan/ICD initialization, GPU discovery, Wayland presentation or iPad compatibility. The run author observed removal of the temporary image and container; a separate reviewer verified the saved results but did not independently witness cleanup.
+
+A separate static check compared the final ICD's submit-function bytes with its recorded link inputs and inspected the AArch64 call instructions. For the four examined Services fence names, the ICD constructs and passes the previously reviewed 32-byte padded buffers. A separate render wait-descriptor cleanup remains source-only and is not in that ICD. Neither observation demonstrates an actual ioctl, GPU job or rendered frame.
+
+### Further sampled Services source checks
+
+An offline original-header comparison checked sampled Services command IDs, constants and eight branches of the actual Mesa allocation helper. The examined command IDs and allocation-mask results matched numerically. The selected headers also differ in optional heap-hint encoding, real-time priority and other constants; those differences have not been shown to affect the examined paths. A build-options comparison shows a conditional incompatibility when the sampled kernel enables PDUMP and the client does not. An independent review reproduced the stated comparisons. This is a hybrid source fixture, not a target configuration, CONNECT test or proof of ABI compatibility.
+
+For the sampled sync-allocation input, the examined Linux Services wrapper normally treats a zero-length user copy as successful; its generic NULL-source documentation is broader than that implementation-specific observation. An independently reviewed host-fake test did not exercise a real target ioctl or usercopy.
