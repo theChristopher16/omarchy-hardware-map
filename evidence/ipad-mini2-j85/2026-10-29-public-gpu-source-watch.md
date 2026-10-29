@@ -306,3 +306,10 @@ This is an offline userspace build, not a new GPU device profile or a compatible
 A later offline AArch64 compile compared the actual saved Mesa and ChromiumOS Services headers for 35 sampled synchronization, memory and compute structures. The paired structure sizes and alignments, 102 sampled field offsets and widths, and 11 selected pointed-to element widths matched in that hybrid build environment. The checked kernel release and debug configurations had different annotation-length limits; Mesa's examined fixed 23-byte annotation fits both. The sync-allocation input declarations also remain different: one side has a placeholder while Mesa supplies an empty input.
 
 These are sampled source-layout results, not proof of identical command semantics, complete ABI compatibility, actual ioctl behavior, firmware compatibility or a working J85 GPU. The comparison used saved public headers with a hybrid build configuration; it did not run on the iPad or submit a GPU job.
+
+
+### Orchard A7 kernel and DART update
+
+On 29 October, Orchard's hardware layer added an [apple-4k kernel configuration](https://github.com/OrchardLinux/hardware/commit/b036485d09d4e81ec91a8fc341c2a7ae95f2da28) for A7, A8 and A8X and reports a clean build. It also integrated an [S5L8960X DART stream-control lock](https://github.com/OrchardLinux/hardware/commit/24cd27b345e1ae5332a845b3b392687d3d7b0b57), crediting the earlier OrchardLinux/linux PR #1; that PR was closed without being merged. These are public source/build developments, not a J85 GPU result.
+
+The [Omarchy A README](https://github.com/OrchardLinux/omarchy-a/blob/5a44b36986165775588ea6802e987cfb44bfec91/README.md) still lists only the iPad 6 Wi-Fi as an experimental installation target and states that GPU acceleration is unavailable. Whether a J85 GPU uses DART and whether either update helps its graphics path remain unverified.
