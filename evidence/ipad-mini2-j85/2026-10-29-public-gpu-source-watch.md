@@ -98,6 +98,37 @@ but other values remain unresolved. Similar field names do not prove
 command, firmware, ABI or platform compatibility; the Intel example does not
 identify the iPad's GPU.
 
+
+## Services and native PowerVR use different kernel interfaces
+
+An independently reviewed comparison of public source found a practical
+distinction for the prepared Mesa work. Mesa has a
+[Services winsys](https://github.com/chaotic-cx/mesa-mirror/blob/5f31557bb1a51004a8bbac397af99fd6a2cbb59a/src/imagination/vulkan/winsys/pvrsrvkm/pvr_srv.c#L682-L728)
+that expects a DRM driver named `pvr` with version 1.17 and initializes
+the Services bridge. Mesa also has a separate
+[native PowerVR winsys](https://github.com/chaotic-cx/mesa-mirror/blob/5f31557bb1a51004a8bbac397af99fd6a2cbb59a/src/imagination/vulkan/winsys/pvr_winsys.c#L93-L115),
+selected for a driver named `powervr`.
+
+The examined [Hoolock PowerVR driver](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination/pvr_drv.h#L10-L19)
+reports `powervr` version 1.0 and exposes a
+[different native DRM interface](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/include/uapi/drm/pvr_drm.h#L97-L111).
+For example, DRM-relative slot 5 is
+[Services module initialization](https://github.com/chaotic-cx/mesa-mirror/blob/5f31557bb1a51004a8bbac397af99fd6a2cbb59a/src/imagination/vulkan/winsys/pvrsrvkm/pvr_srv_bridge.h#L103-L120)
+in the Services interface and `PVR_VM_MAP` in the native interface. Equal
+slot numbers do not make their structures or operations interchangeable.
+Changing a reported name or version would not translate the interfaces.
+
+Mesa's [device discovery](https://github.com/chaotic-cx/mesa-mirror/blob/5f31557bb1a51004a8bbac397af99fd6a2cbb59a/src/imagination/vulkan/pvr_instance.c#L68-L124)
+looks for a compatible render device; a display-only framebuffer or primary
+node does not by itself provide that interface. Opening a render node can
+invoke a driver callback and should not be treated as a passive file check.
+
+This is a source comparison, not a new GPU hardware test. The iPad's actual
+GPU identity, matching kernel binding, platform resources and compatible
+firmware remain unverified, as do GPU initialization and an accelerated frame.
+Compiling the prepared Services changes alone would not supply a compatible
+kernel device; no ioctl or GPU job was run for this comparison.
+
 ## Services 1.17 partial comparison
 
 An offline comparison of the public [ChromiumOS Services 1.17 kernel
