@@ -239,3 +239,11 @@ has one observed device-feature row, labeled `4.0.2.51`. That profile is
 not an established match for the iPad mini 2. This partial comparison does not
 identify J85 or demonstrate compatible firmware, initialization, a GPU job,
 or an accelerated frame. No GPU job was run for this comparison.
+
+### Isolated Mesa desktop build
+
+A separate offline ARM64 Mesa 26.2.5 build, configured for the PowerVR Services winsys, Zink, EGL, GBM, OpenGL ES and Wayland, completed all 1,354 build steps. It produced a PowerVR Vulkan ICD and desktop graphics libraries, plus an ICD manifest and a Zink driver link. Static inspection identified the seven recorded libraries as AArch64 shared objects. The build log contains three warnings: two ignored `fread` results and one ignored `asprintf` result.
+
+The Gallium library requires `libLLVM.so.18.1`. A filename check of the saved R12 image found no matching entry at the exact `/usr/lib` path; a separate ARM64 LLVM 18 library candidate exists, but its dependencies and actual runtime compatibility remain unresolved. Some graphics libraries retain build-layout search paths, and the generated Zink link points into the build tree. They need packaging and relocation work before installation; file presence does not prove successful loading.
+
+This is an offline build and static file inspection. The iPad's GPU identity, compatible kernel driver and firmware, and GPU initialization remain unverified. The resulting stack has not been tested with the iPad GPU, and no accelerated frame or Wayland presentation has been demonstrated.
