@@ -547,3 +547,21 @@ saved runtime9 build hash. It generated metadata naming `gpu-sched`,
 aliases. This was not an in-tree Kbuild or a type/ABI check against the live
 iPad. The saved configuration had module versioning disabled; the exact running
 kernel, compatible J85 binding and firmware remain unverified.
+
+
+### Follow-up: research-only module artifact
+
+A subsequent offline replay of selected
+[public final-module rules](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/scripts/Makefile.modfinal)
+compiled the generated metadata and linked a 292,552-byte AArch64 relocatable
+`powervr.ko` from the public baseline composite. Independent inspection
+confirmed its metadata and 242 undefined external symbol rows. The metadata
+compiles each produced 29 warnings, and the earlier source warnings remain
+untriaged.
+
+This artifact has a deliberately different research-only kernel release
+label and generic T-Head/Imagination device aliases. It is not an in-tree
+Kbuild result, a signed or BTF-verified module, an established match for the
+iPad's kernel ABI or GPU, or evidence of compatible firmware. It must not be
+loaded or deployed. No iPad GPU initialization or accelerated frame was
+demonstrated by this build.
