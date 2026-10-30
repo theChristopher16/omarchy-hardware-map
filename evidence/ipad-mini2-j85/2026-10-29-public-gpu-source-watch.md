@@ -612,3 +612,16 @@ A separate public-source comparison found that the Fugu 1.8 Services kernel inte
 ### Follow-up on the Series 6XT test
 
 A tester later [reported completing the previously failing glmark2 workload](https://patchew.org/linux/20260728091804.382753-1-wenst@chromium.org/) on an MT8173/GX6250 Chromebook with linux-next next-20260826, Mesa 26.1.6 and firmware v1.1 build 6976702 OS. The tester explicitly could not attribute the earlier hang's disappearance to a particular patch; the GPU and driver remained experimental. This is a different Series 6XT device and does not establish support for the iPad's GPU.
+
+
+### Upstream allocation cleanup patch
+
+The examined public PowerVR source can dereference a NULL GEM pointer when firmware-object allocation fails. This was previously reported by Sashiko; Alexandru Dadu's [v4 patch](https://lists.openwall.net/linux-kernel/2026/09/22/638) fixes that path, and Alessio Belle supplied a [review](https://lists.openwall.net/linux-kernel/2026/09/25/437). The affected path was still present in the checked [Linux master snapshot](https://github.com/torvalds/linux/blob/d89e1d186ec9271bf78e62771779e9fc03bf0fc3/drivers/gpu/drm/imagination/pvr_fw.c); that is a point-in-time observation, not an exhaustive branch search.
+
+An attributed, uninstalled copy of v4 matched the posted source preimage and postimage. Host shims of the actual functions reproduced the original NULL failure and passed the patched failure and ordinary cleanup controls at two optimization levels. The complete patched source compiled to an ARM64 relocatable object with 43 untriaged warnings. These checks do not establish a complete kernel build, live target ABI, GPU operation or an accelerated frame.
+
+### Conditional Series 6 metadata boundary
+
+A separate public-source comparison examined eight values missing from a hypothetical Mesa 1.72.4.12 device profile. Seven similarly named firmware-information fields exist inside the inspected kernel, but its current userspace interface does not return those raw values and Mesa still requires its own exact device record. The eighth field was absent from the inspected firmware-feature enum. The exact values and the iPad's GPU revision remain unknown; no values were copied from another device or firmware.
+
+The checked driver also has a separate firmware-unmap ownership question: the META and RISC-V wrappers discard a lower-level error, while cleanup and reset involve additional mapping, reference and flush contracts. Host fakes reproduce the saved source flow, not a real hardware failure. This issue is not resolved by the NULL-GEM patch or by the experimental clock guard.
