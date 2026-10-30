@@ -527,3 +527,23 @@ and 45 serialized entries differed from the saved seed after configuration.
 The exact target configuration, source and toolchain needed for a compatible
 module are not established. These compiles did not link or load a PowerVR
 module or demonstrate GPU initialization, a job or an accelerated frame.
+
+
+### Follow-up: complete baseline object list and symbol check
+
+A later direct compile covered all 28 non-test public PowerVR objects selected
+by the [pinned driver Makefile](https://github.com/HoolockLinux/linux/blob/6831bc701a6ce059e71e5aaa9488c9195bea6927/drivers/gpu/drm/imagination/Makefile)
+and the runtime9-seeded scratch configuration. The logs contained 1,117 warning
+instances, including 64 packed-member warnings; those diagnostics remain
+untriaged. GNU `ld -r` combined the objects into one AArch64 relocatable
+object, retaining 3,573 relocations and 243 undefined symbol-table entries.
+The GNU source archive matched recorded digests, but its GNU signature was
+not verified.
+
+An external-mode `modpost` check then completed without missing-symbol
+errors against a reconstructed symbol list whose SHA-256 matched a transcribed
+saved runtime9 build hash. It generated metadata naming `gpu-sched`,
+`drm_gpuvm` and `drm_exec` dependencies and generic T-Head/Imagination
+aliases. This was not an in-tree Kbuild or a type/ABI check against the live
+iPad. The saved configuration had module versioning disabled; the exact running
+kernel, compatible J85 binding and firmware remain unverified.
