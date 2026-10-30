@@ -585,3 +585,17 @@ the saved iPad configuration, and the live kernel ABI, GPU identity and
 firmware have not been established. This is not a complete in-tree build or a
 deployable module; it must not be loaded. No iPad test or accelerated frame
 followed. The GNU linker source signature remains unverified.
+
+
+### Later firmware clock samples
+
+A public-source trace found that two firmware initializers independently
+sample and narrow the core clock rate, and hard reset can replay those
+initializers before the clock is resumed. The source does not establish the
+provider's rate stability or the firmware's dynamic-rate contract. A separate
+uninstalled diagnostic candidate adds warnings for values exceeding the
+firmware fields' width; it preserves the existing narrowing and does not
+reject or repair invalid values. Host fake-callback checks and offline ARM64
+compiles passed, with untriaged compiler warnings. Independent review checked
+the saved evidence. No iPad, GPU, firmware or live kernel was tested, and the
+candidate is not a complete clock fix or evidence of acceleration.
