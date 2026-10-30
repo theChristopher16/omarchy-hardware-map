@@ -565,3 +565,23 @@ Kbuild result, a signed or BTF-verified module, an established match for the
 iPad's kernel ABI or GPU, or evidence of compatible firmware. It must not be
 loaded or deployed. No iPad GPU initialization or accelerated frame was
 demonstrated by this build.
+
+
+### Follow-up: research-only guard variant
+
+A separate offline build combined 25 reviewed public PowerVR objects with
+three previously reviewed experimental objects: an initial clock-rate check
+and an observed-device-loss submission guard. The saved build records show
+matching normalized compile options and generated headers for the selected
+inputs. Its combined object had the same 243 unresolved names as the public
+baseline, and external-mode modpost completed without diagnostics against the
+reconstructed saved symbol table. The final research-only ARM64 module linked;
+independent inspection checked the input pins, link evidence and output.
+
+The clock check covers only its first sample, and the loss check does not
+serialize concurrent loss and submission. Reset, existing jobs and fences,
+and DMA quiescence remain unresolved. The scratch configuration differs from
+the saved iPad configuration, and the live kernel ABI, GPU identity and
+firmware have not been established. This is not a complete in-tree build or a
+deployable module; it must not be loaded. No iPad test or accelerated frame
+followed. The GNU linker source signature remains unverified.
