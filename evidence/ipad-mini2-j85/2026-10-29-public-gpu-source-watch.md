@@ -599,3 +599,16 @@ reject or repair invalid values. Host fake-callback checks and offline ARM64
 compiles passed, with untriaged compiler warnings. Independent review checked
 the saved evidence. No iPad, GPU, firmware or live kernel was tested, and the
 candidate is not a complete clock fix or evidence of acceleration.
+
+
+### Intel G6430 and Fugu interface follow-up
+
+An [Imagination-hosted 2020–21 report](https://forums.imgtec.com/t/powervr-g6430-on-linux-with-libhybris/3320) describes a Nexus Player with an Intel Atom Z3560 and G6430 running a hardware-accelerated KWin desktop using Android Rogue 1.8@4688949 EGL libraries through libhybris. The author also reported resizing and stability issues. A separately linked [x86 tablet issue](https://github.com/libhybris/libhybris/issues/444) is related by author and link; the sources do not establish that it is the same physical device. The exact forum binaries and firmware were not inspected.
+
+A different participant [reported](https://forums.imgtec.com/t/powervr-g6430-1-72-4-12-firmware/4308) BVNC 1.72.4.12 on Intel Moorefield. A public [ASUS kernel configuration](https://github.com/BORETS24/Marshmallow-kernel-for-Asus-Zenfone-2-ZE551ML-ZE550ML/blob/10dfa0bc46b3c442ba204636a8e48d3a5747ca16/kernel/arch/x86/configs/x86_64_moor_defconfig) selects that BVNC, and its source identifies Rogue Android 1.5@3830101. The forum participant later described an extracted firmware attachment; its provenance, rights and applicability were not established, and the attachment was not accessed.
+
+A separate public-source comparison found that the Fugu 1.8 Services kernel interface and Mesa 26.2.5's Services 1.17 interface differ in their version checks, CONNECT field layouts and the meaning of group-1 command 12. A shared driver name does not make those interfaces interchangeable. These Intel examples do not measure the iPad's GPU revision, supply an Apple platform driver or establish compatible firmware, a GPU job or an iPad frame.
+
+### Follow-up on the Series 6XT test
+
+A tester later [reported completing the previously failing glmark2 workload](https://patchew.org/linux/20260728091804.382753-1-wenst@chromium.org/) on an MT8173/GX6250 Chromebook with linux-next next-20260826, Mesa 26.1.6 and firmware v1.1 build 6976702 OS. The tester explicitly could not attribute the earlier hang's disappearance to a particular patch; the GPU and driver remained experimental. This is a different Series 6XT device and does not establish support for the iPad's GPU.
