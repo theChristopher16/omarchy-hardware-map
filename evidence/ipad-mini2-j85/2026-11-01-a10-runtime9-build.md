@@ -26,6 +26,19 @@ force its device match onto J85. Hardware identity, resource ownership,
 clock/reset/fabric readiness, memory mapping, recovery, a completed GPU job,
 and a GPU-rendered frame remain open.
 
+A second lab-only comparison compiled the same patched GPU heap source with
+4 KiB and 16 KiB kernel configurations. The six compiler-emitted Apple heap
+entries used page-size shifts of 12 and 14 respectively. The other fields in
+those entries matched. This is a difference in compiled descriptions; it
+does not show which values the A10 firmware or the J85 GPU would accept.
+
+The previously staged Mesa 26.2.5 device-info lookup rejected a synthetic
+A10 `13.10.6.2` profile. A focused host test of the newly published
+[Orchard Mesa A10 profile](https://github.com/OrchardLinux/mesa/blob/4a8c71666d9dae6913d1af8ae77c5f34a7a86039/src/imagination/common/device_info/apple-a10.h)
+accepted the same synthetic input and selected its Apple G9P feature; known
+non-Apple profiles served as controls. This was a source-level lookup test,
+not a complete Mesa build, GPU job, or test of the A7 iPad.
+
 Separately, a fresh iPad mini 2 Wi-Fi/J85 runtime9 **RAM** boot was verified
 over USB. A read-only inventory found no registered battery power supply,
 no active Wi-Fi interface and no internal block device. The iPad's current
