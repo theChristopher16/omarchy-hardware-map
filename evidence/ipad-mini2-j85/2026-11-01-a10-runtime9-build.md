@@ -39,6 +39,12 @@ accepted the same synthetic input and selected its Apple G9P feature; known
 non-Apple profiles served as controls. This was a source-level lookup test,
 not a complete Mesa build, GPU job, or test of the A7 iPad.
 
+An ARM64 build of the same small lookup and test harness subsequently ran in
+RAM on the iPad mini 2's CPU. The fixed synthetic A10 input and a fixed
+non-Apple control both returned the expected results. The temporary binary
+was removed and a same-boot postflight succeeded. This was a CPU-only software
+test: it did not inspect the iPad's GPU, identify its GPU, or render a frame.
+
 Separately, a fresh iPad mini 2 Wi-Fi/J85 runtime9 **RAM** boot was verified
 over USB. A read-only inventory found no registered battery power supply,
 no active Wi-Fi interface and no internal block device. The iPad's current
