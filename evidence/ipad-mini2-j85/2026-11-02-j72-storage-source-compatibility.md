@@ -37,6 +37,7 @@ management-send error was not returned to the caller. This is a source/fake
 observation, not an observed failure on either physical iPad.
 
 J85-specific firmware handoff, controller/DMA ownership, read-only admission,
-timeout and recovery remain unverified. The iPad was not detected over USB
-when these builds were made. No internal installation or persistent boot is
-established.
+timeout and recovery remain unverified. Earlier J85 Linux RAM inventories
+found no exposed internal physical block device; they did not establish that
+the storage hardware is absent. The iPad was not detected over USB when these
+builds were made. No internal installation or persistent boot is established.
