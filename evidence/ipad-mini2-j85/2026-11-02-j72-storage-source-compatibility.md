@@ -39,5 +39,7 @@ observation, not an observed failure on either physical iPad.
 J85-specific firmware handoff, controller/DMA ownership, read-only admission,
 timeout and recovery remain unverified. Earlier J85 Linux RAM inventories
 found no exposed internal physical block device; they did not establish that
-the storage hardware is absent. The iPad was not detected over USB when these
-builds were made. No internal installation or persistent boot is established.
+the storage hardware is absent. [Earlier J85 storage evidence](https://github.com/theChristopher16/omarchy-hardware-map/blob/f9859076441dbdda2893fa624067f2c4c8880245/evidence/ipad-mini2-j85/2026-10-27-storage.md)
+notes that the older public ANS1 initialization path can enable writes. The
+iPad was not detected over USB when these builds were made. No internal
+installation or persistent boot is established.
