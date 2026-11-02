@@ -45,6 +45,13 @@ non-Apple control both returned the expected results. The temporary binary
 was removed and a same-boot postflight succeeded. This was a CPU-only software
 test: it did not inspect the iPad's GPU, identify its GPU, or render a frame.
 
+On the same RAM boot, a separately built public Orchard G9P encoder harness
+ran on the iPad CPU with 897 fixed synthetic single-instruction cases. Its
+output matched a saved public Python reference, and the temporary files were
+removed. The C and Python encoders share Orchard provenance; this comparison
+does not establish instruction correctness on hardware. It used no GPU node,
+register or firmware and does not establish J85 GPU identity or acceleration.
+
 Separately, a fresh iPad mini 2 Wi-Fi/J85 runtime9 **RAM** boot was verified
 over USB. A read-only inventory found no registered battery power supply,
 no active Wi-Fi interface and no internal block device. The iPad's current
