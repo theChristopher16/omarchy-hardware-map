@@ -14,9 +14,18 @@ states and three GPU performance states. Parsing it conservatively yields
 seven opaque pairs followed by a 72-byte zero tail. Three pairs in the first
 nonzero set and three in the second set share their second fields, while the
 first fields in the second set are exactly half the corresponding first-set
-values. This supports a two-related-sets hypothesis; it does **not** establish
-units, voltage semantics, clock ownership, an active row, a physical rate or
-safe write values.
+values. The capture alone does not establish their units or consumer.
+
+Public source resolves the table schema without resolving the write path.
+[m1n1 parses each legacy entry as frequency then voltage](https://github.com/AsahiLinux/m1n1/blob/70757dc74c2dac485188acaa2fa7e73be5b108ee/proxyclient/m1n1/adt.py#L149-L152),
+and Orchard's current
+[A7-A11 OPP conversion](https://github.com/OrchardLinux/orchard/blob/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2/boot/m1n1/patches/orchard/0011-kboot-Fill-the-A7-A11-GPU-s-performance-states-from-.patch#L1-L82)
+defines them as Hz and mV, keeps state zero as off and preserves the original
+array index as `opp-level`. The live device's voltage entries differ from the
+public [J85 ADT sample](https://github.com/SoMainline/adt_collection/blob/768d800c46140c9ba39a372d097fa49f7197a66d/a7/j85.adt#L2780-L2833).
+That is evidence to retain the device-filled table, not substitute another
+J85's values. It still does **not** establish clock ownership, an active row,
+a physical rate or safe writes.
 
 The same RAM boot also exposed a disabled live device-tree node compatible
 with `apple,s5l8960x-gpu`, two register resources and a reference to the
@@ -79,6 +88,10 @@ probe:
 3. Only while that domain is confirmed active, take two identical,
    source-pinned reads of the device-local wrapper status, then stop for
    review.
+
+Any later OPP provider must keep the live table's original selector indices;
+sorting by frequency would mix the full- and half-rate banks and lose the
+hardware token.
 
 That rung must not select a performance row, read a GPU core/broadcast bank,
 assert a device reset, issue START, load firmware or submit a job. A later rung
