@@ -48,6 +48,19 @@ transition.
 
 ## Public work reviewed
 
+Orchard now carries an
+[identity-only J85 catalog entry](https://github.com/OrchardLinux/orchard/blob/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2/devices/j85/device.toml)
+and a hash-pinned
+[iOS 12.5.8 boot-input record](https://github.com/OrchardLinux/orchard/blob/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2/devices/j85/boot.json).
+This is useful upstream structure for a later contribution, but it is
+deliberately not a J85 build profile: the entry says there is no Orchard
+bring-up, its methods table is empty, and the generated compatibility matrix
+lists A7 as zero boards in build. The matrix's J85 driver bindings for
+backlight, buttons and USB describe enabled device-tree nodes, not verified
+features. Our native touch, Wi-Fi and PMGR observations therefore must not be
+silently promoted into Orchard's feature table without a reproducible Orchard
+image and board qualification.
+
 [Project Cascadia's Apple A5 GPU notebook](https://github.com/rzxvx/Project-Cascadia/blob/091d441f19e101699f7e1835a80ccb48d6e54eec/devices/a5/docs/research/p105-gpu.md)
 documents a device-tested SGX543MP2 bring-up. Its most transferable lesson is
 methodological: recover the exact iOS sequence, keep Apple firmware outside
