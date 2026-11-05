@@ -37,6 +37,15 @@ No GPU register was mapped or read. No clock, power-domain, reset, firmware,
 job, storage or persistent-state action was performed. These observations
 establish a metadata and ownership boundary, not GPU acceleration.
 
+A subsequent, independently reviewed one-register diagnostic read the J85
+`ps_gfx` provider's PMGR record at offset `0x20218` exactly once. It returned
+`0x00000300`: target and actual state were both zero, reset and device-disable
+were clear, and the clock- and power-gated history bits were set. The exact
+scope and kernel log were byte-identical before and after; no hardware write
+or GPU/wrapper register access occurred. This closes the passive OFF-baseline
+substep only. It does not prove a retained owner epoch or authorize a power
+transition.
+
 ## Public work reviewed
 
 [Project Cascadia's Apple A5 GPU notebook](https://github.com/rzxvx/Project-Cascadia/blob/091d441f19e101699f7e1835a80ccb48d6e54eec/devices/a5/docs/research/p105-gpu.md)
@@ -80,14 +89,14 @@ path are not evidence for A7 or J85.
 The next admissible native experiment is intentionally smaller than a GPU
 probe:
 
-1. On an exact, provenance-checked RAM boot, read the typed `ps_gfx` PMGR
-   baseline and require the public J85 off-state fields to agree.
-2. In a separately reviewed image, attach only the disabled GPU platform node
-   to the existing `gfx` generic power domain and perform one acquire/release
-   cycle with rollback evidence.
-3. Only while that domain is confirmed active, take two identical,
-   source-pinned reads of the device-local wrapper status, then stop for
-   review.
+1. **Completed:** on an exact, provenance-checked RAM boot, the typed
+   `ps_gfx` PMGR baseline matched the public J85 OFF-state fields.
+2. **Next:** in a separately reviewed image, attach only the disabled GPU
+   platform node to the existing `gfx` generic power domain and perform one
+   acquire/release cycle with rollback evidence.
+3. Keep both anonymous 1 MiB GPU resources untouched until an exact J85 source
+   identifies a safe wrapper-status register. Public A9 and A10 reports do not
+   establish that either J85 resource or offset has those semantics.
 
 Any later OPP provider must keep the live table's original selector indices;
 sorting by frequency would mix the full- and half-rate banks and lose the
