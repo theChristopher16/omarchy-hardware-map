@@ -131,11 +131,14 @@ The J85 work now has a more precise step-2 boundary. A phase-separated API for
 the A7 provider has been host-tested, but all four physical callbacks remain
 unimplemented: control-bus/profile live, START-safe, post-START live and later
 core-rate observation. The successful tests use synthetic callbacks. Retained
-J85 metadata contains a frequency catalog and SGX performance rows, but no
-source-backed relation from the GFX power gate to a frequency ID, active
-performance index/bank, units or state-to-divider control. Consequently a
-PMGR-active bit, CPU counter, parsed table row or callback presence cannot be
-promoted to proof of a safe physical START profile.
+J85 metadata contains a frequency catalog and SGX performance rows. Orchard's
+public A7-A11 boot handoff now establishes that the rows contain
+frequency-Hz/voltage-mV pairs, that state 0 is off and that powered state
+numbers become Linux OPP levels. It still supplies no source-backed relation
+from the GFX power gate to a selected active row, live clock rate, control
+register or state-to-divider transition. Consequently a PMGR-active bit, CPU
+counter, parsed table row or callback presence cannot be promoted to proof of
+a safe physical START profile.
 
 This narrows the next useful work without changing the hardware claim: identify
 the exact J85 consumer/selector and its current reset/mapping epoch, then bind a
@@ -144,9 +147,167 @@ the provider must refuse rather than invent a fixed clock or choose an OPP row.
 No physical callback, firmware-alive event, fenced job or GPU frame has been
 verified on J85.
 
+### Boot-derived OPP handoff is now reproducible offline
+
+Orchard's immutable
+[A7-A11 OPP injection patch](https://github.com/OrchardLinux/orchard/blob/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2/boot/m1n1/patches/orchard/0011-kboot-Fill-the-A7-A11-GPU-s-performance-states-from-.patch)
+reads `perf-state-count` and `perf-states` from the live Apple Device Tree,
+leaves an existing Linux OPP table untouched, excludes state 0 as off, and
+emits each nonzero powered row as `opp-hz`, `opp-microvolt` and `opp-level`.
+It leaves the table empty when the live properties are absent or malformed.
+
+An initial host-only model applied that exact transformation to a hash-pinned,
+redacted same-boot J85 receipt and correctly derived six powered-state entries.
+Its independent review nevertheless rejected the model as a provenance-bearing
+handoff: optimized validation used removable assertions, byte-different JSON
+could inherit the pinned source label, the public patch bytes and package
+closure were not bound, and it overclaimed that the physical boot clock was
+preserved.
+
+A corrected V3 successor exact-binds the input and public patch bytes, uses
+explicit checks under normal and optimized Python, and reports boot-clock
+preservation as unknown. Its authored normal and optimized suites each pass 12
+adversarial cases. Independent review nevertheless rejected it: a targeted
+same-name validation stub could supply fabricated entries, target, source hash,
+algorithm commit and an incomplete authority schema while still passing in
+both modes. A V4 successor closed those exact-result/schema checks, but its
+independent review also rejected it: post-freeze bytecode files broke exact
+directory closure, and the validator did not bind the imported implementation's
+path and bytes. The six-entry tuple transformation remains useful host-only
+evidence, but no model qualifies as a provenance-bearing native GPU input. The
+device-specific table bytes and voltages are intentionally not published here.
+
+A V5 successor then retained the exact implementation through a no-follow file
+descriptor, checked a closed nine-file package before and after validation and
+refused same-name stubs, links and closure drift. One independent audit gave it
+bounded host-only approval, but a second rejected it because ambient Python
+import authority could substitute the hash provider and because the package's
+pathname and ancestor identities were not rebound after execution. V6 added
+isolated execution and full retained ancestor-chain rebinding. It too remains
+rejected: a fresh independent audit demonstrated that an unpinned
+absolute-path hash provider could still be substituted in normal and optimized
+runs. The next revision must eliminate or exact-bind every interpreter,
+search-root and provider dependency. These are provenance failures in an
+offline model, not evidence that the six-row transform itself is arithmetically
+wrong.
+
+This closes the boot-resource table's field semantics and handoff shape, not
+the physical provider gap. It does not say which row is active, measure a GPU
+clock, expose a selector, power or reset the GPU, start firmware, submit a job
+or render a frame.
+
 Two new Orchard `main` commits are relevant to later power work:
 [`c8fed9c`](https://github.com/OrchardLinux/orchard/commit/c8fed9cd8e30af1b8925869f5d252d673c12b7ad)
 and
 [`7e8eceb`](https://github.com/OrchardLinux/orchard/commit/7e8ecebccf3be0fbe90fe8cf7790eadf4c545266)
 add suspend/charger-wake changes. They are not GPU support and have not been
 qualified on J85.
+
+## Late public-source follow-up
+
+Orchard subsequently added
+[`221c822`](https://github.com/OrchardLinux/orchard/commit/221c8223f1dd3eb9e9d435c3c684eb701b5433c3),
+which rebases the wake-on-plug charger patch after the earlier USB-fallback
+change. The commit fixes a concrete integration failure: the patch series had
+stopped at the charger patch. It restores patch-series application past that
+patch; the commit's kernel check was skipped, so it is not evidence of a
+successful kernel build or that charging, suspend or wake has been qualified on
+J85.
+
+Our exact offline verification of the merged DWC2 patch found one separate
+source-quality issue: the new helper separated an existing kernel-doc block
+from the function it documents, producing a candidate-only `W=1` warning in
+the J85, generic 4 KiB and Apple 16 KiB focused builds. The source-order-only
+fix merged through [Orchard PR #88](https://github.com/OrchardLinux/orchard/pull/88)
+as
+[`49ba6d5`](https://github.com/OrchardLinux/orchard/commit/49ba6d56e76614252646baa970aef4d632e8985d).
+It leaves the USB behavior unchanged and is not a native J85 USB result.
+
+A newly active MIT-licensed
+[`mattonik/ipad-nixos`](https://github.com/mattonik/ipad-nixos) repository adds
+execution-disabled models for A8X/J81 GPU allocation views and address-space
+ownership. Its
+[`b6fb777`](https://github.com/mattonik/ipad-nixos/commit/b6fb7775a6e8cea5fdcbe2096b0d63f5695f4140)
+commit reports that a recovered J81 `sgx` device-tree node has no explicit
+IOMMU/DART binding and therefore refuses to invent a GPU aperture or stream.
+That is a useful review principle for J85: mapped, backing and device-visible
+addresses must be tied to a source-backed owner before firmware is started.
+It is not J85 evidence, and the private ADT artifact cited by that commit is
+not published in the repository, so its board-specific conclusion cannot be
+independently reproduced from the public tree. The J81 constants, allocation
+classes and mapper selectors are not inputs to the A7/J85 port.
+
+Later public commits in that repository narrow the J81 mapping path without
+closing it. [`2c2163f`](https://github.com/mattonik/ipad-nixos/commit/2c2163fdf592ee72a4eb7369d6289b2481ee3783)
+separates the CPU `IOMemoryDescriptor`/`IOMemoryMap` view from the accelerator's
+private mapping policy; [`bda4d79`](https://github.com/mattonik/ipad-nixos/commit/bda4d79987a9ae3a21465e45562f8ee1afc4b5b1)
+traces that policy through a provider-created map object; and
+[`5c08cf4`](https://github.com/mattonik/ipad-nixos/commit/5c08cf434a8fed04420c4ea78c714f61e86a4142)
+reports that the initializer records mapping metadata but does not calculate a
+device address, program DART, touch GPU MMIO or launch firmware. The useful
+transfer is therefore a four-part J85 admission boundary: CPU mapping,
+accelerator policy, device-visible address materialization and DART ownership
+must each have a source-backed receipt. The J81 selectors, addresses, page
+scale, firmware and mapping classes remain quarantined, and this does not
+establish any native J85 GPU progress.
+
+The focused J85 provider audit reaches the same conservative boundary from
+our own retained evidence. A safe START predicate needs exact target and owner
+identity, current mapping/power/reset/bridge receipts bound to one owner epoch,
+a same-boot live profile, and a source-backed control-bus observation. The
+last two are still absent. In particular, no retained source binds an SGX
+clock consumer to a route or selector, so a core-rate callback must remain
+unsupported rather than returning a catalog value or CPU-derived surrogate.
+This is a sharper refusal contract, not a successful clock/reset sequence,
+firmware-alive event or rendered frame.
+
+After the first review, the same J81 repository published an author-reported
+guarded Fender reset/hold/wake result in
+[`31c61bd`](https://github.com/mattonik/ipad-nixos/commit/31c61bdb76ac6b1af0129dfa287a17d52ccdc5aa).
+The report records reset-clear, hold-confirmation and bounded wake-poll
+readbacks and explicitly excludes direct RGX access, firmware and rendering.
+The log paths and hashes cited by that report are not present in the public
+tree, so the physical result is not independently reproducible from the
+repository. Later commits through
+[`efec6eb`](https://github.com/mattonik/ipad-nixos/commit/efec6eb0cb5375a42c7559d48b2bd131c2b28569)
+model post-loader, interrupt, GPC control-list and boot-descriptor stages with
+execution disabled.
+
+Only the sequencing discipline is transferable: one power owner, reset-clear
+poll, reset-state transition, held-state confirmation, setup, request and a
+bounded wake observation. J81 register addresses, values, allocation classes,
+firmware tables and hooks remain quarantined. This update does not close any
+of the four J85 physical provider callbacks or establish a J85 clock, reset,
+firmware-alive event, job or frame.
+
+## Later J81 clock-state and address-domain boundary
+
+The same MIT-licensed J81 repository subsequently published an
+author-reported, guarded hardware batch in
+[`c89e908`](https://github.com/mattonik/ipad-nixos/commit/c89e9085f10c4be0e3161ac932395c046f4d4ea2)
+and
+[`c1c7378`](https://github.com/mattonik/ipad-nixos/commit/c1c73789a8b5d15f3531dd458ddf083a2f77e720).
+It reports one PMGR transition from target/actual state 0 to 15, followed by a
+GPC state read of zero. Its gate then stopped before the GPC control and GPU
+identity registers. That is useful fail-closed evidence on J81, but the cited
+append-only device logs are private and the result is neither independently
+reproducible from the public tree nor a J85 observation.
+
+The accompanying offline series through
+[`640dda8`](https://github.com/mattonik/ipad-nixos/commit/640dda8ff4412809c6cf70139b5a9452fbe0a54a)
+models an Apple `device-clocks` record and argues that the existing Linux PMGR
+power-domain driver has no equivalent parser, clock-provider registration,
+bridge-selector handling or provider busy-count action. Later commits through
+[`e2f9d67`](https://github.com/mattonik/ipad-nixos/commit/e2f9d6796f7128e4827a0b6692da96bafabdb86e)
+separate the GPU core MMIO window, auxiliary resource mappings, a special META
+bootloader slot and ordinary firmware-data address domains. Those conclusions
+are based partly on unpublished J81 inputs and A9/G5P cross-checks, so their
+record bytes, selectors, addresses and segment layout remain quarantined.
+
+The transferable result is another contract boundary, not an implementation:
+power-domain success does not prove that the platform clock-state action ran,
+and a CPU or physical address does not prove firmware-visible ownership. A
+future J85 START receipt must therefore bind the clock-state provider action,
+reset epoch, core MMIO owner, firmware-resource mappings and device-visible
+address materialization to the same guarded owner interval. The current J85
+observer remains read-only and does not satisfy those later gates.
