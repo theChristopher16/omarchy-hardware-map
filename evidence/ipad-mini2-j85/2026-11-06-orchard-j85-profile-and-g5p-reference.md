@@ -177,6 +177,20 @@ path and bytes. The six-entry tuple transformation remains useful host-only
 evidence, but no model qualifies as a provenance-bearing native GPU input. The
 device-specific table bytes and voltages are intentionally not published here.
 
+A V5 successor then retained the exact implementation through a no-follow file
+descriptor, checked a closed nine-file package before and after validation and
+refused same-name stubs, links and closure drift. One independent audit gave it
+bounded host-only approval, but a second rejected it because ambient Python
+import authority could substitute the hash provider and because the package's
+pathname and ancestor identities were not rebound after execution. V6 added
+isolated execution and full retained ancestor-chain rebinding. It too remains
+rejected: a fresh independent audit demonstrated that an unpinned
+absolute-path hash provider could still be substituted in normal and optimized
+runs. The next revision must eliminate or exact-bind every interpreter,
+search-root and provider dependency. These are provenance failures in an
+offline model, not evidence that the six-row transform itself is arithmetically
+wrong.
+
 This closes the boot-resource table's field semantics and handoff shape, not
 the physical provider gap. It does not say which row is active, measure a GPU
 clock, expose a selector, power or reset the GPU, start firmware, submit a job
