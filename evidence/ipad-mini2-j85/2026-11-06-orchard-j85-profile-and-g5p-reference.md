@@ -131,11 +131,14 @@ The J85 work now has a more precise step-2 boundary. A phase-separated API for
 the A7 provider has been host-tested, but all four physical callbacks remain
 unimplemented: control-bus/profile live, START-safe, post-START live and later
 core-rate observation. The successful tests use synthetic callbacks. Retained
-J85 metadata contains a frequency catalog and SGX performance rows, but no
-source-backed relation from the GFX power gate to a frequency ID, active
-performance index/bank, units or state-to-divider control. Consequently a
-PMGR-active bit, CPU counter, parsed table row or callback presence cannot be
-promoted to proof of a safe physical START profile.
+J85 metadata contains a frequency catalog and SGX performance rows. Orchard's
+public A7-A11 boot handoff now establishes that the rows contain
+frequency-Hz/voltage-mV pairs, that state 0 is off and that powered state
+numbers become Linux OPP levels. It still supplies no source-backed relation
+from the GFX power gate to a selected active row, live clock rate, control
+register or state-to-divider transition. Consequently a PMGR-active bit, CPU
+counter, parsed table row or callback presence cannot be promoted to proof of
+a safe physical START profile.
 
 This narrows the next useful work without changing the hardware claim: identify
 the exact J85 consumer/selector and its current reset/mapping epoch, then bind a
@@ -143,6 +146,27 @@ bounded physical observation to the same owner interval. Until that exists,
 the provider must refuse rather than invent a fixed clock or choose an OPP row.
 No physical callback, firmware-alive event, fenced job or GPU frame has been
 verified on J85.
+
+### Boot-derived OPP handoff is now reproducible offline
+
+Orchard's immutable
+[A7-A11 OPP injection patch](https://github.com/OrchardLinux/orchard/blob/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2/boot/m1n1/patches/orchard/0011-kboot-Fill-the-A7-A11-GPU-s-performance-states-from-.patch)
+reads `perf-state-count` and `perf-states` from the live Apple Device Tree,
+leaves an existing Linux OPP table untouched, excludes state 0 as off, and
+emits each nonzero powered row as `opp-hz`, `opp-microvolt` and `opp-level`.
+It leaves the table empty when the live properties are absent or malformed.
+
+We applied that exact transformation to a hash-pinned, redacted same-boot J85
+receipt in a host-only model. It deterministically produces six powered-state
+entries and refuses static zero templates, cross-board inputs, pre-populated
+OPP tables and any request to select or activate a state. Normal and optimized
+test runs each pass eight adversarial cases. The device-specific table bytes
+and voltages are intentionally not published here.
+
+This closes the boot-resource table's field semantics and handoff shape, not
+the physical provider gap. It does not say which row is active, measure a GPU
+clock, expose a selector, power or reset the GPU, start firmware, submit a job
+or render a frame.
 
 Two new Orchard `main` commits are relevant to later power work:
 [`c8fed9c`](https://github.com/OrchardLinux/orchard/commit/c8fed9cd8e30af1b8925869f5d252d673c12b7ad)
