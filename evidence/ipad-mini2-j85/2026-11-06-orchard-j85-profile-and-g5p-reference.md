@@ -191,3 +191,22 @@ clock consumer to a route or selector, so a core-rate callback must remain
 unsupported rather than returning a catalog value or CPU-derived surrogate.
 This is a sharper refusal contract, not a successful clock/reset sequence,
 firmware-alive event or rendered frame.
+
+After the first review, the same J81 repository published an author-reported
+guarded Fender reset/hold/wake result in
+[`31c61bd`](https://github.com/mattonik/ipad-nixos/commit/31c61bdb76ac6b1af0129dfa287a17d52ccdc5aa).
+The report records reset-clear, hold-confirmation and bounded wake-poll
+readbacks and explicitly excludes direct RGX access, firmware and rendering.
+The log paths and hashes cited by that report are not present in the public
+tree, so the physical result is not independently reproducible from the
+repository. Later commits through
+[`efec6eb`](https://github.com/mattonik/ipad-nixos/commit/efec6eb0cb5375a42c7559d48b2bd131c2b28569)
+model post-loader, interrupt, GPC control-list and boot-descriptor stages with
+execution disabled.
+
+Only the sequencing discipline is transferable: one power owner, reset-clear
+poll, reset-state transition, held-state confirmation, setup, request and a
+bounded wake observation. J81 register addresses, values, allocation classes,
+firmware tables and hooks remain quarantined. This update does not close any
+of the four J85 physical provider callbacks or establish a J85 clock, reset,
+firmware-alive event, job or frame.
