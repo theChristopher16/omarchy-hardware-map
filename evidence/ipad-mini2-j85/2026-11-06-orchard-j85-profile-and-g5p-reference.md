@@ -170,10 +170,12 @@ preservation as unknown. Its authored normal and optimized suites each pass 12
 adversarial cases. Independent review nevertheless rejected it: a targeted
 same-name validation stub could supply fabricated entries, target, source hash,
 algorithm commit and an incomplete authority schema while still passing in
-both modes. The six-entry tuple transformation remains useful host-only
-evidence, but neither model qualifies as a provenance-bearing native GPU input.
-A later local successor is under independent review. The device-specific table
-bytes and voltages are intentionally not published here.
+both modes. A V4 successor closed those exact-result/schema checks, but its
+independent review also rejected it: post-freeze bytecode files broke exact
+directory closure, and the validator did not bind the imported implementation's
+path and bytes. The six-entry tuple transformation remains useful host-only
+evidence, but no model qualifies as a provenance-bearing native GPU input. The
+device-specific table bytes and voltages are intentionally not published here.
 
 This closes the boot-resource table's field semantics and handoff shape, not
 the physical provider gap. It does not say which row is active, measure a GPU
