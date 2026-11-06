@@ -156,12 +156,21 @@ leaves an existing Linux OPP table untouched, excludes state 0 as off, and
 emits each nonzero powered row as `opp-hz`, `opp-microvolt` and `opp-level`.
 It leaves the table empty when the live properties are absent or malformed.
 
-We applied that exact transformation to a hash-pinned, redacted same-boot J85
-receipt in a host-only model. It deterministically produces six powered-state
-entries and refuses static zero templates, cross-board inputs, pre-populated
-OPP tables and any request to select or activate a state. Normal and optimized
-test runs each pass eight adversarial cases. The device-specific table bytes
-and voltages are intentionally not published here.
+An initial host-only model applied that exact transformation to a hash-pinned,
+redacted same-boot J85 receipt and correctly derived six powered-state entries.
+Its independent review nevertheless rejected the model as a provenance-bearing
+handoff: optimized validation used removable assertions, byte-different JSON
+could inherit the pinned source label, the public patch bytes and package
+closure were not bound, and it overclaimed that the physical boot clock was
+preserved.
+
+A corrected successor exact-binds the input and public patch bytes, uses
+explicit checks under normal and optimized Python, refuses malicious validator
+substitution, and reports boot-clock preservation as unknown. Its authored
+normal and optimized suites each pass 12 adversarial cases. Independent review
+of that successor is still pending, so neither model is yet a native GPU input.
+The device-specific table bytes and voltages are intentionally not published
+here.
 
 This closes the boot-resource table's field semantics and handoff shape, not
 the physical provider gap. It does not say which row is active, measure a GPU
