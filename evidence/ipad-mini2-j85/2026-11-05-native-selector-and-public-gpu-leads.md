@@ -72,6 +72,12 @@ features. Our native touch, Wi-Fi and PMGR observations therefore must not be
 silently promoted into Orchard's feature table without a reproducible Orchard
 image and board qualification.
 
+The same Orchard revision also adds
+[verified, on-demand palera1n and checkra1n boot entries](https://github.com/OrchardLinux/orchard/commit/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2).
+That improves host-side tool selection for boards with a declared boot method,
+but J85's methods table remains empty. It does not add a J85 boot chain,
+internal-storage installer, GPU driver or untethered startup path.
+
 [Project Cascadia's Apple A5 GPU notebook](https://github.com/rzxvx/Project-Cascadia/blob/091d441f19e101699f7e1835a80ccb48d6e54eec/devices/a5/docs/research/p105-gpu.md)
 documents a device-tested SGX543MP2 bring-up. Its most transferable lesson is
 methodological: recover the exact iOS sequence, keep Apple firmware outside
