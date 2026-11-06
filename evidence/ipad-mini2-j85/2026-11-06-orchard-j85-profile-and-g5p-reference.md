@@ -279,3 +279,35 @@ bounded wake observation. J81 register addresses, values, allocation classes,
 firmware tables and hooks remain quarantined. This update does not close any
 of the four J85 physical provider callbacks or establish a J85 clock, reset,
 firmware-alive event, job or frame.
+
+## Later J81 clock-state and address-domain boundary
+
+The same MIT-licensed J81 repository subsequently published an
+author-reported, guarded hardware batch in
+[`c89e908`](https://github.com/mattonik/ipad-nixos/commit/c89e9085f10c4be0e3161ac932395c046f4d4ea2)
+and
+[`c1c7378`](https://github.com/mattonik/ipad-nixos/commit/c1c73789a8b5d15f3531dd458ddf083a2f77e720).
+It reports one PMGR transition from target/actual state 0 to 15, followed by a
+GPC state read of zero. Its gate then stopped before the GPC control and GPU
+identity registers. That is useful fail-closed evidence on J81, but the cited
+append-only device logs are private and the result is neither independently
+reproducible from the public tree nor a J85 observation.
+
+The accompanying offline series through
+[`640dda8`](https://github.com/mattonik/ipad-nixos/commit/640dda8ff4412809c6cf70139b5a9452fbe0a54a)
+models an Apple `device-clocks` record and argues that the existing Linux PMGR
+power-domain driver has no equivalent parser, clock-provider registration,
+bridge-selector handling or provider busy-count action. Later commits through
+[`e2f9d67`](https://github.com/mattonik/ipad-nixos/commit/e2f9d6796f7128e4827a0b6692da96bafabdb86e)
+separate the GPU core MMIO window, auxiliary resource mappings, a special META
+bootloader slot and ordinary firmware-data address domains. Those conclusions
+are based partly on unpublished J81 inputs and A9/G5P cross-checks, so their
+record bytes, selectors, addresses and segment layout remain quarantined.
+
+The transferable result is another contract boundary, not an implementation:
+power-domain success does not prove that the platform clock-state action ran,
+and a CPU or physical address does not prove firmware-visible ownership. A
+future J85 START receipt must therefore bind the clock-state provider action,
+reset epoch, core MMIO owner, firmware-resource mappings and device-visible
+address materialization to the same guarded owner interval. The current J85
+observer remains read-only and does not satisfy those later gates.
