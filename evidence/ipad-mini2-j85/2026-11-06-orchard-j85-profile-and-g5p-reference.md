@@ -149,6 +149,4 @@ Two new Orchard `main` commits are relevant to later power work:
 and
 [`7e8eceb`](https://github.com/OrchardLinux/orchard/commit/7e8ecebccf3be0fbe90fe8cf7790eadf4c545266)
 add suspend/charger-wake changes. They are not GPU support and have not been
-qualified on J85. A fresh scan of the tracked J72, J86, omapad, img-pvr,
-Hoolock and Project Cascadia sources found no newer evidence-backed A7/J85 GPU
-implementation.
+qualified on J85.
