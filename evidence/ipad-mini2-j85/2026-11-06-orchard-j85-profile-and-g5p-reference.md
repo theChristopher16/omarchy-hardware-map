@@ -56,6 +56,25 @@ The transferable parts are architectural and procedural:
 The A9 constants, firmware image, context programs, descriptor layouts and
 16 KiB-page assumptions are not J85 inputs and must not be copied.
 
+## Same-day Orchard changes relevant to the J85 lab
+
+[Orchard PR #80](https://github.com/OrchardLinux/orchard/pull/80) merged our
+PowerVR reset-safety contribution. If acquiring the GPU power reference fails,
+`pvr_power_reset()` now returns before taking the reset lock, invoking reset
+callbacks or releasing a reference it never acquired. Orchard reproduced the
+source tree and compiled the change for `apple-16k`; the patch has not been
+booted on a device, and it does not implement J85 clocks, firmware or jobs.
+
+[Orchard PR #81](https://github.com/OrchardLinux/orchard/pull/81) merged two
+generic Apple DWC2 gadget fixes: use `INCR16` DMA bursts and NAK idle non-iso
+OUT endpoints instead of allowing them to block the shared receive FIFO. The
+author measured materially better USB-network and FunctionFS throughput on
+J71b, and the patches are in the common Apple USB series. They are promising
+for the J85 serial/network stalls seen during RAM bring-up, but have not been
+tested on J85 and are not GPU support. The same PR's Tristar no-source fallback
+is also untested outside its source board and must not be treated as a J85
+charging result.
+
 ## Other public changes reviewed
 
 [The J86 repository's 6 November update](https://github.com/perryraskin/ipad-mini2-omarchy/commit/536e8dbb1cf57b712dbc45fdf37fbd1683188617)
@@ -63,6 +82,13 @@ records progress toward an offline internal-root audit, while still leaving
 J85/J86 installation disabled and unqualified. It is useful as a refusal and
 receipt model, not evidence that J85 storage works. Board-specific firmware,
 calibration and settings remain non-transferable.
+
+A newly published [J85 Pongo/RAM-Linux lab](https://github.com/juan-garassino/003-pongo-lab/tree/f05e75cc243811f7bf5d75468bbce290cb2f5bca)
+documents another same-board boot path and a touch diagnostic. Its published
+hardware result is a touchscreen probe timeout, not a working GPU or touch
+stack, and the repository currently declares no license. It is useful for
+cross-checking boot and diagnostic structure only; its source is not a reusable
+input unless the author supplies compatible licensing and independent evidence.
 
 Our earlier documentation contribution was merged as
 [Orchard PR #5](https://github.com/OrchardLinux/orchard/pull/5). The new J85
