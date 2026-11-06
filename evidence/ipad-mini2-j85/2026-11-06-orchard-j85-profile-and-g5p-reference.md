@@ -237,6 +237,20 @@ not published in the repository, so its board-specific conclusion cannot be
 independently reproduced from the public tree. The J81 constants, allocation
 classes and mapper selectors are not inputs to the A7/J85 port.
 
+Later public commits in that repository narrow the J81 mapping path without
+closing it. [`2c2163f`](https://github.com/mattonik/ipad-nixos/commit/2c2163fdf592ee72a4eb7369d6289b2481ee3783)
+separates the CPU `IOMemoryDescriptor`/`IOMemoryMap` view from the accelerator's
+private mapping policy; [`bda4d79`](https://github.com/mattonik/ipad-nixos/commit/bda4d79987a9ae3a21465e45562f8ee1afc4b5b1)
+traces that policy through a provider-created map object; and
+[`5c08cf4`](https://github.com/mattonik/ipad-nixos/commit/5c08cf434a8fed04420c4ea78c714f61e86a4142)
+reports that the initializer records mapping metadata but does not calculate a
+device address, program DART, touch GPU MMIO or launch firmware. The useful
+transfer is therefore a four-part J85 admission boundary: CPU mapping,
+accelerator policy, device-visible address materialization and DART ownership
+must each have a source-backed receipt. The J81 selectors, addresses, page
+scale, firmware and mapping classes remain quarantined, and this does not
+establish any native J85 GPU progress.
+
 The focused J85 provider audit reaches the same conservative boundary from
 our own retained evidence. A safe START predicate needs exact target and owner
 identity, current mapping/power/reset/bridge receipts bound to one owner epoch,
