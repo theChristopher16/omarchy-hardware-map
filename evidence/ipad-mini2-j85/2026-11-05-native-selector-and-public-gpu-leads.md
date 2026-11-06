@@ -46,6 +46,17 @@ or GPU/wrapper register access occurred. This closes the passive OFF-baseline
 substep only. It does not prove a retained owner epoch or authorize a power
 transition.
 
+A later once-only native test closed that narrow transition gap. Linux
+attached an unbound staging consumer to the existing `gfx` generic power
+domain, acquired one runtime-PM reference, independently confirmed active
+`ps_gfx=0x000003ff`, held it for 15 ms, released it through the same framework
+path and confirmed the exact OFF value `0x00000300`. The worker retained no
+scope or node; the static scope and kernel log were byte-identical before and
+after. Both anonymous GPU resources remained unmapped for access, and the
+test used no GPU/Fender MMIO, core-clock or reset API, firmware, DMA, IRQ or
+job path. This proves the PMGR/genpd power owner and rollback for that image;
+it does not prove the physical GPU core-rate provider or reset/startup order.
+
 ## Public work reviewed
 
 Orchard now carries an
@@ -104,10 +115,12 @@ probe:
 
 1. **Completed:** on an exact, provenance-checked RAM boot, the typed
    `ps_gfx` PMGR baseline matched the public J85 OFF-state fields.
-2. **Next:** in a separately reviewed image, attach only the disabled GPU
-   platform node to the existing `gfx` generic power domain and perform one
-   acquire/release cycle with rollback evidence.
-3. Keep both anonymous 1 MiB GPU resources untouched until an exact J85 source
+2. **Completed:** the same boot performed one framework-owned acquire,
+   independent active confirmation and release with exact OFF rollback and no
+   retained owner.
+3. **Next:** identify a source-backed A7 physical core-rate provider and the
+   reset/startup order without assigning the PMGR gate to a duplicate owner.
+4. Keep both anonymous 1 MiB GPU resources untouched until an exact J85 source
    identifies a safe wrapper-status register. Public A9 and A10 reports do not
    establish that either J85 resource or offset has those semantics.
 
@@ -115,7 +128,7 @@ Any later OPP provider must keep the live table's original selector indices;
 sorting by frequency would mix the full- and half-rate banks and lose the
 hardware token.
 
-That rung must not select a performance row, read a GPU core/broadcast bank,
+The next rung must not select a performance row, read a GPU core/broadcast bank,
 assert a device reset, issue START, load firmware or submit a job. A later rung
 can be admitted only after the owner and rollback evidence are stable.
 
