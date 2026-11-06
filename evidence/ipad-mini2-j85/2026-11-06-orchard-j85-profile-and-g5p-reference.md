@@ -161,6 +161,13 @@ stopped at the charger patch and could not produce a kernel. This makes the
 public series buildable again, but it is still not evidence that charging,
 suspend or wake has been qualified on J85.
 
+Our exact offline verification of the merged DWC2 patch found one separate
+source-quality issue: the new helper separated an existing kernel-doc block
+from the function it documents, producing a candidate-only `W=1` warning in
+the J85, generic 4 KiB and Apple 16 KiB focused builds. The source-order-only
+fix is proposed as [Orchard PR #88](https://github.com/OrchardLinux/orchard/pull/88).
+It leaves the USB behavior unchanged and is not a native J85 USB result.
+
 A newly active MIT-licensed
 [`mattonik/ipad-nixos`](https://github.com/mattonik/ipad-nixos) repository adds
 execution-disabled models for A8X/J81 GPU allocation views and address-space
