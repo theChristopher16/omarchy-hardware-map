@@ -150,3 +150,37 @@ and
 [`7e8eceb`](https://github.com/OrchardLinux/orchard/commit/7e8ecebccf3be0fbe90fe8cf7790eadf4c545266)
 add suspend/charger-wake changes. They are not GPU support and have not been
 qualified on J85.
+
+## Late public-source follow-up
+
+Orchard subsequently added
+[`221c822`](https://github.com/OrchardLinux/orchard/commit/221c8223f1dd3eb9e9d435c3c684eb701b5433c3),
+which rebases the wake-on-plug charger patch after the earlier USB-fallback
+change. The commit fixes a concrete integration failure: the patch series had
+stopped at the charger patch and could not produce a kernel. This makes the
+public series buildable again, but it is still not evidence that charging,
+suspend or wake has been qualified on J85.
+
+A newly active MIT-licensed
+[`mattonik/ipad-nixos`](https://github.com/mattonik/ipad-nixos) repository adds
+execution-disabled models for A8X/J81 GPU allocation views and address-space
+ownership. Its
+[`b6fb777`](https://github.com/mattonik/ipad-nixos/commit/b6fb7775a6e8cea5fdcbe2096b0d63f5695f4140)
+commit reports that a recovered J81 `sgx` device-tree node has no explicit
+IOMMU/DART binding and therefore refuses to invent a GPU aperture or stream.
+That is a useful review principle for J85: mapped, backing and device-visible
+addresses must be tied to a source-backed owner before firmware is started.
+It is not J85 evidence, and the private ADT artifact cited by that commit is
+not published in the repository, so its board-specific conclusion cannot be
+independently reproduced from the public tree. The J81 constants, allocation
+classes and mapper selectors are not inputs to the A7/J85 port.
+
+The focused J85 provider audit reaches the same conservative boundary from
+our own retained evidence. A safe START predicate needs exact target and owner
+identity, current mapping/power/reset/bridge receipts bound to one owner epoch,
+a same-boot live profile, and a source-backed control-bus observation. The
+last two are still absent. In particular, no retained source binds an SGX
+clock consumer to a route or selector, so a core-rate callback must remain
+unsupported rather than returning a catalog value or CPU-derived surrogate.
+This is a sharper refusal contract, not a successful clock/reset sequence,
+firmware-alive event or rendered frame.
