@@ -164,13 +164,16 @@ could inherit the pinned source label, the public patch bytes and package
 closure were not bound, and it overclaimed that the physical boot clock was
 preserved.
 
-A corrected successor exact-binds the input and public patch bytes, uses
-explicit checks under normal and optimized Python, refuses malicious validator
-substitution, and reports boot-clock preservation as unknown. Its authored
-normal and optimized suites each pass 12 adversarial cases. Independent review
-of that successor is still pending, so neither model is yet a native GPU input.
-The device-specific table bytes and voltages are intentionally not published
-here.
+A corrected V3 successor exact-binds the input and public patch bytes, uses
+explicit checks under normal and optimized Python, and reports boot-clock
+preservation as unknown. Its authored normal and optimized suites each pass 12
+adversarial cases. Independent review nevertheless rejected it: a targeted
+same-name validation stub could supply fabricated entries, target, source hash,
+algorithm commit and an incomplete authority schema while still passing in
+both modes. The six-entry tuple transformation remains useful host-only
+evidence, but neither model qualifies as a provenance-bearing native GPU input.
+A later local successor is under independent review. The device-specific table
+bytes and voltages are intentionally not published here.
 
 This closes the boot-resource table's field semantics and handoff shape, not
 the physical provider gap. It does not say which row is active, measure a GPU
@@ -190,15 +193,18 @@ Orchard subsequently added
 [`221c822`](https://github.com/OrchardLinux/orchard/commit/221c8223f1dd3eb9e9d435c3c684eb701b5433c3),
 which rebases the wake-on-plug charger patch after the earlier USB-fallback
 change. The commit fixes a concrete integration failure: the patch series had
-stopped at the charger patch and could not produce a kernel. This makes the
-public series buildable again, but it is still not evidence that charging,
-suspend or wake has been qualified on J85.
+stopped at the charger patch. It restores patch-series application past that
+patch; the commit's kernel check was skipped, so it is not evidence of a
+successful kernel build or that charging, suspend or wake has been qualified on
+J85.
 
 Our exact offline verification of the merged DWC2 patch found one separate
 source-quality issue: the new helper separated an existing kernel-doc block
 from the function it documents, producing a candidate-only `W=1` warning in
 the J85, generic 4 KiB and Apple 16 KiB focused builds. The source-order-only
-fix is proposed as [Orchard PR #88](https://github.com/OrchardLinux/orchard/pull/88).
+fix merged through [Orchard PR #88](https://github.com/OrchardLinux/orchard/pull/88)
+as
+[`49ba6d5`](https://github.com/OrchardLinux/orchard/commit/49ba6d56e76614252646baa970aef4d632e8985d).
 It leaves the USB behavior unchanged and is not a native J85 USB result.
 
 A newly active MIT-licensed
