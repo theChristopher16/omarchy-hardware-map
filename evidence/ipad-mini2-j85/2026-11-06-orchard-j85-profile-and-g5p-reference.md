@@ -112,3 +112,43 @@ The current guarded J85 sequence remains:
 The A9 work strengthens the design target for steps 3–6. It does not close
 step 2 or establish a working J85 GPU, render node, frame or accelerated
 Omarchy desktop.
+
+## Follow-up: exact provider gap and current public delta
+
+The current [Orchard PR #74](https://github.com/OrchardLinux/orchard/pull/74)
+head reviewed for this follow-up is
+[`85adc6e`](https://github.com/OrchardLinux/orchard/commit/85adc6e3cad99c73b25c254eb88c07e5b8f8d217).
+Its most transferable contribution is the separation of responsibilities:
+local exact-device firmware extraction, firmware transport, a typed render
+ABI, VM/arena lifetime, GEM/PRIME/syncobj integration, bounded retirement and
+recovery, and release-time power/IRQ teardown. That architecture is useful for
+reviewing a future J85 driver. Its J71t MMIO, IRQs, device tree, firmware
+hashes, command ABI and reset constants are still A9-specific and must not be
+copied into the A7 port. Orchard is mixed/per-file SPDX, so any eventual source
+reuse also needs a file-level license check.
+
+The J85 work now has a more precise step-2 boundary. A phase-separated API for
+the A7 provider has been host-tested, but all four physical callbacks remain
+unimplemented: control-bus/profile live, START-safe, post-START live and later
+core-rate observation. The successful tests use synthetic callbacks. Retained
+J85 metadata contains a frequency catalog and SGX performance rows, but no
+source-backed relation from the GFX power gate to a frequency ID, active
+performance index/bank, units or state-to-divider control. Consequently a
+PMGR-active bit, CPU counter, parsed table row or callback presence cannot be
+promoted to proof of a safe physical START profile.
+
+This narrows the next useful work without changing the hardware claim: identify
+the exact J85 consumer/selector and its current reset/mapping epoch, then bind a
+bounded physical observation to the same owner interval. Until that exists,
+the provider must refuse rather than invent a fixed clock or choose an OPP row.
+No physical callback, firmware-alive event, fenced job or GPU frame has been
+verified on J85.
+
+Two new Orchard `main` commits are relevant to later power work:
+[`c8fed9c`](https://github.com/OrchardLinux/orchard/commit/c8fed9cd8e30af1b8925869f5d252d673c12b7ad)
+and
+[`7e8eceb`](https://github.com/OrchardLinux/orchard/commit/7e8ecebccf3be0fbe90fe8cf7790eadf4c545266)
+add suspend/charger-wake changes. They are not GPU support and have not been
+qualified on J85. A fresh scan of the tracked J72, J86, omapad, img-pvr,
+Hoolock and Project Cascadia sources found no newer evidence-backed A7/J85 GPU
+implementation.
