@@ -311,3 +311,55 @@ future J85 START receipt must therefore bind the clock-state provider action,
 reset epoch, core MMIO owner, firmware-resource mappings and device-visible
 address materialization to the same guarded owner interval. The current J85
 observer remains read-only and does not satisfy those later gates.
+
+## 9 November public delta: boot state, performance state and job ownership
+
+Three later public changes sharpen the J85 plan without supplying a J85 GPU
+implementation.
+
+First, the J81/A8X investigation now separates three things that earlier notes
+could too easily conflate. Its
+[`d838f13`](https://github.com/mattonik/ipad-nixos/commit/d838f131ad1d97f70e27e9d8086dc33cffd06854)
+commit traces a GPC performance-state setter/getter and a separate boot-time
+rate-calculation path. The report explicitly does not connect the observed GPC
+state value to a row in the GFX performance table or to a physical core rate.
+Its bounded selector-table scan found no direct use of the page-5 calculated
+slot in the inspected records. A same-boot
+[`bb1f70d`](https://github.com/mattonik/ipad-nixos/commit/bb1f70d45b87d198f1f9a3fd1fbb3a55628c5ef6)
+capture also reports the sampled GFX performance-table words unchanged across
+one guarded power transition. These are author-reported J81 results, partly
+dependent on unpublished local artifacts, not J85 observations. The
+transferable conclusion is narrower: a power-domain acknowledgement, GPC state
+readback and populated performance table are distinct receipts. A future J85
+provider must not infer an active OPP row or physical clock from any one of
+them.
+
+Second, Orchard's A10/J71b driver added
+[`de8f6a0`](https://github.com/OrchardLinux/orchard/commit/de8f6a0feb0aded5dada13effb921dad72a6654a),
+which gives render jobs separate command areas, advances the scheduling entry
+per command and derives fragment retirement from the firmware-written stamp.
+The author reports this prevents later jobs from overwriting data the firmware
+still rereads at retirement. This is a useful future J85 lifetime rule: command
+storage, scheduling identity and retirement evidence must remain job-specific.
+It applies only after compatible firmware communication and submission exist;
+it does not provide the A7 clock/reset provider, firmware ABI or first safe
+core access.
+
+Third, Project Cascadia reports a real A5/P105 Linux boot from NAND through
+kloader and iBEC in
+[`862f6d4`](https://github.com/rzxvx/Project-Cascadia/commit/862f6d4739c0303475f47c1b9f433909e5479ca3),
+followed by a conditional USB-PHY recovery in
+[`bb1ed0e`](https://github.com/rzxvx/Project-Cascadia/commit/bb1ed0e84091f418e532d6a721b80a1927cfd6fa).
+Its reported PC-less path left three board-specific PMGR states and the OTG PHY
+off; the driver restores that board's known DFU state only when the PHY is
+observed off. This is useful installation methodology: compare boot-path state,
+move the minimum recovery into the owning driver and keep the USB-boot path a
+no-op. P105 addresses, values, boot images, NAND layout and 32-bit A5 chain are
+not J85 inputs. The report does not establish J85 internal storage, an
+untethered A7 boot or replacement of Apple's first-stage logo.
+
+The resulting J85 action remains unchanged at the hardware boundary: identify
+the A7 provider that owns the selected performance state and physical rate,
+bind it to the same reset and mapping epoch, and only then attempt firmware
+startup. These public changes justify documentation and test-plan updates, not
+an Orchard feature claim or a J85 driver PR.
