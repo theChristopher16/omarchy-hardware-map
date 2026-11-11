@@ -363,3 +363,52 @@ the A7 provider that owns the selected performance state and physical rate,
 bind it to the same reset and mapping epoch, and only then attempt firmware
 startup. These public changes justify documentation and test-plan updates, not
 an Orchard feature claim or a J85 driver PR.
+
+## 10 November public delta: installed systems and cross-OS timing
+
+Orchard now ships an A10 GPU-firmware extraction recipe and counts the T8010
+G9P core as supported in
+[`68d5775`](https://github.com/OrchardLinux/orchard/commit/68d57755a4c6705593a566d74ba1bb44884554ac).
+Its Omarchy layer installs the matching Vulkan driver and discovers the GPU at
+login in
+[`4729fe3`](https://github.com/OrchardLinux/omarchy-a/commit/4729fe3f4a715b6f1f06294d1d85e5236a31a237).
+This is author-reported A10 behavior on J71b/J171/J172. The reusable integration
+pattern is a hash-pinned firmware recipe plus session-time capability
+discovery; the A10 image, extractor, BVNC and driver support level are not A7
+inputs and do not establish J85 firmware compatibility or rendering.
+
+The J81/A8X investigation also published a same-boot timing observation in
+[`db9422d`](https://github.com/mattonik/ipad-nixos/commit/db9422d2d29642624bf8163d03db519b38405f03).
+Its guarded report records PMGR page-5 offset `+4` as zero before the GPC and
+identity sequence and bit 30 set after the identity hook, while GPU firmware
+later booted. A Linux sample remained zero after a GFX/GPC-only sequence. The
+author explicitly does not identify the operation that changes the bit, its
+meaning, its writability or a causal role in the Linux stall. These are J81
+addresses and observations; they justify a timing-focused J85 observation
+plan, not replaying the bit or importing the address.
+
+Two installation changes clarify the native-storage boundary. Orchard now
+selects only NVMe namespace 1 for its 64-bit direct installer in
+[`73668e6`](https://github.com/OrchardLinux/orchard/commit/73668e68f68586a1700eac039fbebabeb824a4fe)
+and reports whether an error happened before or after its first write in
+[`e46f9e8`](https://github.com/OrchardLinux/orchard/commit/e46f9e845c3a851a04b0500b4664315c45d4e593).
+The same installer still expects an `applesftl` block device on 32-bit boards;
+it does not create the missing J85 ANS1/ASP storage path.
+
+Project Cascadia's open
+[`A5 K93 bring-up PR`](https://github.com/rzxvx/Project-Cascadia/pull/40)
+reports a persistent Linux overlay on a validated middle band of raw NAND,
+with iOS retained and a PC-less launch from jailbroken iOS. Its GPL-2.0 source
+and hardware report provide useful safety methodology: revalidate ownership on
+every start, keep a register-level write allowlist, acknowledge writes only
+after media completion and preserve a RAM-only fallback. K93 uses the A5 raw
+NAND/VSVFL/YAFTL stack and its own board geometry; J85 uses a different
+ANS1/ASP controller path. None of its block numbers, commands, firmware or
+write permissions are transferable, and the open PR does not establish a J85
+storage device or native install.
+
+The next honest J85 milestones therefore remain separate: first expose and
+validate a read-only internal block device, then prove bounded persistence and
+recovery, and independently complete the exact A7 clock/reset/firmware path
+before claiming GPU acceleration. An A10 desktop, J81 timing sample or A5
+persistent installation is supporting methodology, not J85 completion.
