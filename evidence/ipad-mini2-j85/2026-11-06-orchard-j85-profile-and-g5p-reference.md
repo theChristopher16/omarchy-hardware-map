@@ -541,3 +541,27 @@ remains set: register aliasing, bus response, power/reset state and other
 timing relationships remain hypotheses. The driver retained state requiring
 a cold reboot before another request. Native transcripts and device-specific
 values remain private.
+
+### Sixth fresh boot: passive PMGR trace on J85
+
+An attended J85 RAM boot used a fresh PongoOS capture, the matching v5 kernel,
+and one manually admitted GPU request. Eight read-only Linux preflight
+commands completed successfully, including the kernel, boot identity,
+captured-property and idle-worker checks. The v5 instrumentation summarizes
+PMGR words returned by checks already in the driver; it adds no MMIO reads or
+new clock or reset action. No internal storage was written.
+
+The PMGR confirmations completed and remained stable across ten samples.
+Fender START completed after three writes and six status reads; its busy
+indication cleared. Two bounded core-range reads then completed, but they
+returned the same raw word. The word's register meaning and physical address
+decode remain unverified, so this is **not** a GPU identity or BVNC claim.
+The retained worker requires a cold RAM restart before another GPU request.
+
+The two preceding v4 tests had exhausted the 256-operation limit while
+Fender START stayed busy. This one v5 run shows the completion can occur
+again, but it does not establish repeatability or explain the difference.
+The passive logging change cannot be credited as the cause. Power, clock,
+reset and address-response behavior still need separate evidence. No GPU
+firmware boot, job, triangle, frame or acceleration was demonstrated.
+The private transcript and board-specific values are not published here.
