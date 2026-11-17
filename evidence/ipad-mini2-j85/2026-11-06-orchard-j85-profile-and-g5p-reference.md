@@ -515,7 +515,29 @@ physical address decode and meaning of the returned word remain unverified.
 The one history4 run that cleared busy began its request about four minutes
 and 26 seconds after its RAM boot. The three later failures began about two
 minutes and 52 seconds to three minutes and 25 seconds after boot. Those
-four observations motivate a measured delayed replay, without establishing
+four observations motivated the delayed replay below, without establishing
 that elapsed time caused the different outcomes. An address/bus-response
 audit remains necessary. The trace kernel left the tested boot in a
 cold-restart-required state.
+
+### Fifth fresh boot: six-minute Fender replay
+
+An attended J85 test repeated the passive Fender status trace on a fresh,
+separately admitted RAM boot with matching captured power and bridge
+properties. One GPU request began at 19:54:35.621751 UTC, 6m11.690s after
+the 19:48:23.931933 UTC RAM `bootm`. The USB console returned the complete
+bounded trace. No internal storage was written.
+
+Fender START again returned `-7` after three writes and 253 reads. Busy bit
+4 remained high in every read. The first five status words were `0x11`, the
+sixth changed transiently, and the dominant later word again matched the
+uninterpreted raw samples described in the [fourth-boot trace](#fourth-fresh-boot-passive-fender-status-trace).
+This replay recorded 40 adjacent-word transitions, compared with 27 in that
+earlier trace. It produced no core read, GPU identity, firmware job or frame.
+
+Waiting over six minutes therefore weakens a simple boot-age-only account of
+history4's one six-read START completion. It does not determine why busy
+remains set: register aliasing, bus response, power/reset state and other
+timing relationships remain hypotheses. The driver retained state requiring
+a cold reboot before another request. Native transcripts and device-specific
+values remain private.
