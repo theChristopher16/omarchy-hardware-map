@@ -423,7 +423,7 @@ automatic GPU request and wrote nothing to internal storage. The USB serial
 shell remained responsive afterward.
 
 The J85 power-domain target and actual states agreed, and all 33 guarded
-bridge writes completed. Fender START then completed after three writes and
+bridge-write callbacks returned. Fender START then completed after three writes and
 six status reads; its busy indication cleared within the bounded observation.
 The previous J85 attempt had stopped with the busy indication still set after
 61 reads. The new limit was larger, but this completion took fewer reads than
@@ -440,9 +440,27 @@ parked, cold-reboot-required state; it does **not** establish a GPU identity,
 BVNC, valid core registers, firmware startup, a GPU job, a rendered frame or
 desktop acceleration. No second hardware request was made in that boot.
 
-The next bounded J85 experiment should validate the core and Fender address
-windows against independent A7 evidence and distinguish a genuine core read
-from repeated bus data before interpreting an identity word. The full native
-transcript and device-specific values are retained privately for analysis;
-they are not published as firmware, calibration, identifiers or reusable
-board settings.
+### Second fresh boot: history5
+
+A separate attended J85 DFU-to-PongoOS boot loaded the next matching Linux
+image in RAM, with no internal-storage write. Its new software address-metadata
+check passed: the claimed core and Fender ranges, mappings and read offsets
+were distinct and ordered. This checks the software description only; it does
+not validate physical address decoding or a live GPU core.
+
+The power-domain target and actual states again agreed under the existing
+boot-retained-state assumption, and all 33 bridge-write callbacks returned.
+This time Fender START did **not** complete: three writes and 253 status reads
+exhausted its local 256-operation budget while the busy indication remained
+set. No core read was attempted. The request ended in a retained state that
+requires a fresh RAM boot before another GPU test. It did not start firmware,
+submit a GPU job, render a frame or establish acceleration.
+
+History4's six-read START completion therefore did not reproduce on history5,
+despite the same bounded Fender path and matching captured power and bridge
+properties. The cause of the run-to-run variation remains unknown. A fresh,
+guarded replay of the exact history4 image is the next useful comparison;
+core address decoding and the ambiguous history4 raw samples still need
+independent validation before any identity claim. Full native transcripts and
+device-specific values remain private; no firmware, calibration, identifiers
+or reusable board settings are published here.
