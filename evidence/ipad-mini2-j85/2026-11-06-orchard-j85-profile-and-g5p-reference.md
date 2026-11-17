@@ -412,3 +412,37 @@ validate a read-only internal block device, then prove bounded persistence and
 recovery, and independently complete the exact A7 clock/reset/firmware path
 before claiming GPU acceleration. An A10 desktop, J81 timing sample or A5
 persistent installation is supporting methodology, not J85 completion.
+
+## 17 November J85 RAM-only GPU diagnostic
+
+An attended iPad mini 2 Wi-Fi (J85/A7) test advanced one step beyond the
+earlier Fender START timeout. The diagnostic used a fresh DFU-to-PongoOS RAM
+boot, a same-session capture of the J85 power and bridge properties, and one
+manually triggered request on a matching Linux RAM image. The image made no
+automatic GPU request and wrote nothing to internal storage. The USB serial
+shell remained responsive afterward.
+
+The J85 power-domain target and actual states agreed, and all 33 guarded
+bridge writes completed. Fender START then completed after three writes and
+six status reads; its busy indication cleared within the bounded observation.
+The previous J85 attempt had stopped with the busy indication still set after
+61 reads. The new limit was larger, but this completion took fewer reads than
+the old limit, so the limit increase alone does not explain the difference.
+Boot state, timing and register behavior remain open questions. The physical
+clock-rate/reset provider is still unqualified; this test used an explicit
+boot-retained-state assumption.
+
+The worker next completed two raw reads from distinct core offsets. Both
+returned the same word, which also matched a Fender status word observed on a
+previous boot. That cross-window repetition makes address decoding or stale
+bus data a live concern. The terminal receipt records the raw samples and a
+parked, cold-reboot-required state; it does **not** establish a GPU identity,
+BVNC, valid core registers, firmware startup, a GPU job, a rendered frame or
+desktop acceleration. No second hardware request was made in that boot.
+
+The next bounded J85 experiment should validate the core and Fender address
+windows against independent A7 evidence and distinguish a genuine core read
+from repeated bus data before interpreting an identity word. The full native
+transcript and device-specific values are retained privately for analysis;
+they are not published as firmware, calibration, identifiers or reusable
+board settings.
