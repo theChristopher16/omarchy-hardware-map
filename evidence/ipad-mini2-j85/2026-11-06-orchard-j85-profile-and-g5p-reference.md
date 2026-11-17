@@ -458,9 +458,35 @@ submit a GPU job, render a frame or establish acceleration.
 
 History4's six-read START completion therefore did not reproduce on history5,
 despite the same bounded Fender path and matching captured power and bridge
-properties. The cause of the run-to-run variation remains unknown. A fresh,
-guarded replay of the exact history4 image is the next useful comparison;
+properties. The cause of the run-to-run variation remains unknown. The exact
+history4-image replay below tests whether its earlier completion repeats;
 core address decoding and the ambiguous history4 raw samples still need
 independent validation before any identity claim. Full native transcripts and
 device-specific values remain private; no firmware, calibration, identifiers
 or reusable board settings are published here.
+
+### Third fresh boot: exact history4-image replay
+
+An attended J85 test used a new DFU-to-PongoOS run, a fresh same-session
+capture and a separately admitted RAM boot of the unchanged history4 image.
+The newly captured power and bridge property bytes matched the earlier run,
+so the assembled image bytes also matched. The new Linux boot had a distinct
+boot identity, matching live properties, an idle GPU worker and no automatic
+GPU request. One manually admitted request was made; no internal storage was
+written.
+
+The power-domain target and actual states agreed under the same
+boot-retained-state assumption, and all 33 bridge-write callbacks returned.
+Fender START again did **not** complete: three writes and 253 status reads
+exhausted the local 256-operation budget while the busy indication remained
+set. No core read, firmware start, GPU job or rendered frame followed. The
+worker retained state that requires a new RAM boot before another request.
+
+The earlier six-read history4 completion is therefore not reliably
+repeatable even with the same image and captured property bytes. History5's
+added software address-metadata check is not required for this failure. These
+boots do not identify the cause: timing, retained power or reset state,
+hardware acceptance of bridge writes, and address decoding still need
+separate evidence. A bounded log of status values from the reads already
+performed is being built offline as the next diagnostic; it has not been
+tested on J85. No accelerated rendering is claimed.
