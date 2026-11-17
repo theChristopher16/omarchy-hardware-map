@@ -487,6 +487,35 @@ repeatable even with the same image and captured property bytes. History5's
 added software address-metadata check is not required for this failure. These
 boots do not identify the cause: timing, retained power or reset state,
 hardware acceptance of bridge writes, and address decoding still need
-separate evidence. A bounded log of status values from the reads already
-performed is being built offline as the next diagnostic; it has not been
-tested on J85. No accelerated rendering is claimed.
+separate evidence. The fourth fresh boot below collected a bounded trace of
+the status reads already performed. No accelerated rendering is claimed.
+
+### Fourth fresh boot: passive Fender status trace
+
+A fresh, separately admitted J85 RAM boot ran the matching passive-trace
+kernel. A same-session capture supplied the power and bridge properties,
+which matched the earlier captures. One manual GPU request completed over
+the USB console, and the kernel returned a full status trace. No internal
+storage was written.
+
+The 33 guarded bridge callbacks returned. Fender START still did not
+complete. Its three writes and 253 status reads exhausted the same
+256-operation limit, with the busy indication set in every completed read.
+The driver made no core read. It started no GPU firmware or job and rendered
+no frame.
+
+The first five reads returned `0x00000011`. The sixth returned
+`0xbed1c738`, followed by `0xbed1f77a` and `0xbed3f77a` on reads seven
+and eight. The last value appeared in 232 of the 253 reads. The trace
+recorded 27 transitions between adjacent status words. The dominant word
+equals both raw, uninterpreted core samples from the first history4 boot.
+The source uses distinct mapped ranges and direct MMIO read callbacks. The
+physical address decode and meaning of the returned word remain unverified.
+
+The one history4 run that cleared busy began its request about four minutes
+and 26 seconds after its RAM boot. The three later failures began about two
+minutes and 52 seconds to three minutes and 25 seconds after boot. Those
+four observations motivate a measured delayed replay, without establishing
+that elapsed time caused the different outcomes. An address/bus-response
+audit remains necessary. The trace kernel left the tested boot in a
+cold-restart-required state.
