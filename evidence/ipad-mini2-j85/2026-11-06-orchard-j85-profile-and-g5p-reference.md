@@ -552,15 +552,19 @@ PMGR words returned by checks already in the driver; it adds no MMIO reads or
 new clock or reset action. No internal storage was written.
 
 The PMGR confirmations completed and remained stable across ten samples.
-Fender START completed after three writes and six status reads; its busy
-indication cleared. Two bounded core-range reads then completed, but they
-returned the same raw word. The word's register meaning and physical address
-decode remain unverified, so this is **not** a GPU identity or BVNC claim.
+The driver's Fender START **completion predicate** returned zero after three
+writes and six status reads when its busy indication cleared. The terminal
+status did not establish the requested ON state, so physical GPU power-on
+remains unverified. Two bounded core-range reads then completed, but they
+returned the same raw word also observed in prior Fender status reads. The
+word's register meaning and physical address decode remain unverified, so
+this is **not** a GPU identity or BVNC claim.
 The retained worker requires a cold RAM restart before another GPU request.
 
 The two preceding v4 tests had exhausted the 256-operation limit while
-Fender START stayed busy. This one v5 run shows the completion can occur
-again, but it does not establish repeatability or explain the difference.
+Fender START stayed busy. This one v5 run shows the driver's completion
+predicate can return zero again, but it does not establish repeatability or
+explain the difference.
 The passive logging change cannot be credited as the cause. Power, clock,
 reset and address-response behavior still need separate evidence. No GPU
 firmware boot, job, triangle, frame or acceleration was demonstrated.
