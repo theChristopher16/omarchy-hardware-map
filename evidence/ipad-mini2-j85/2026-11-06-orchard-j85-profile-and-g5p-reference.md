@@ -131,11 +131,14 @@ The J85 work now has a more precise step-2 boundary. A phase-separated API for
 the A7 provider has been host-tested, but all four physical callbacks remain
 unimplemented: control-bus/profile live, START-safe, post-START live and later
 core-rate observation. The successful tests use synthetic callbacks. Retained
-J85 metadata contains a frequency catalog and SGX performance rows, but no
-source-backed relation from the GFX power gate to a frequency ID, active
-performance index/bank, units or state-to-divider control. Consequently a
-PMGR-active bit, CPU counter, parsed table row or callback presence cannot be
-promoted to proof of a safe physical START profile.
+J85 metadata contains a frequency catalog and SGX performance rows. Orchard's
+public A7-A11 boot handoff now establishes that the rows contain
+frequency-Hz/voltage-mV pairs, that state 0 is off and that powered state
+numbers become Linux OPP levels. It still supplies no source-backed relation
+from the GFX power gate to a selected active row, live clock rate, control
+register or state-to-divider transition. Consequently a PMGR-active bit, CPU
+counter, parsed table row or callback presence cannot be promoted to proof of
+a safe physical START profile.
 
 This narrows the next useful work without changing the hardware claim: identify
 the exact J85 consumer/selector and its current reset/mapping epoch, then bind a
@@ -144,9 +147,449 @@ the provider must refuse rather than invent a fixed clock or choose an OPP row.
 No physical callback, firmware-alive event, fenced job or GPU frame has been
 verified on J85.
 
+### Boot-derived OPP handoff is now reproducible offline
+
+Orchard's immutable
+[A7-A11 OPP injection patch](https://github.com/OrchardLinux/orchard/blob/a6ffc904bf8acb7af2fd0fc94f84ca194bd82ed2/boot/m1n1/patches/orchard/0011-kboot-Fill-the-A7-A11-GPU-s-performance-states-from-.patch)
+reads `perf-state-count` and `perf-states` from the live Apple Device Tree,
+leaves an existing Linux OPP table untouched, excludes state 0 as off, and
+emits each nonzero powered row as `opp-hz`, `opp-microvolt` and `opp-level`.
+It leaves the table empty when the live properties are absent or malformed.
+
+An initial host-only model applied that exact transformation to a hash-pinned,
+redacted same-boot J85 receipt and correctly derived six powered-state entries.
+Its independent review nevertheless rejected the model as a provenance-bearing
+handoff: optimized validation used removable assertions, byte-different JSON
+could inherit the pinned source label, the public patch bytes and package
+closure were not bound, and it overclaimed that the physical boot clock was
+preserved.
+
+A corrected V3 successor exact-binds the input and public patch bytes, uses
+explicit checks under normal and optimized Python, and reports boot-clock
+preservation as unknown. Its authored normal and optimized suites each pass 12
+adversarial cases. Independent review nevertheless rejected it: a targeted
+same-name validation stub could supply fabricated entries, target, source hash,
+algorithm commit and an incomplete authority schema while still passing in
+both modes. A V4 successor closed those exact-result/schema checks, but its
+independent review also rejected it: post-freeze bytecode files broke exact
+directory closure, and the validator did not bind the imported implementation's
+path and bytes. The six-entry tuple transformation remains useful host-only
+evidence, but no model qualifies as a provenance-bearing native GPU input. The
+device-specific table bytes and voltages are intentionally not published here.
+
+A V5 successor then retained the exact implementation through a no-follow file
+descriptor, checked a closed nine-file package before and after validation and
+refused same-name stubs, links and closure drift. One independent audit gave it
+bounded host-only approval, but a second rejected it because ambient Python
+import authority could substitute the hash provider and because the package's
+pathname and ancestor identities were not rebound after execution. V6 added
+isolated execution and full retained ancestor-chain rebinding. It too remains
+rejected: a fresh independent audit demonstrated that an unpinned
+absolute-path hash provider could still be substituted in normal and optimized
+runs. The next revision must eliminate or exact-bind every interpreter,
+search-root and provider dependency. These are provenance failures in an
+offline model, not evidence that the six-row transform itself is arithmetically
+wrong.
+
+This closes the boot-resource table's field semantics and handoff shape, not
+the physical provider gap. It does not say which row is active, measure a GPU
+clock, expose a selector, power or reset the GPU, start firmware, submit a job
+or render a frame.
+
 Two new Orchard `main` commits are relevant to later power work:
 [`c8fed9c`](https://github.com/OrchardLinux/orchard/commit/c8fed9cd8e30af1b8925869f5d252d673c12b7ad)
 and
 [`7e8eceb`](https://github.com/OrchardLinux/orchard/commit/7e8ecebccf3be0fbe90fe8cf7790eadf4c545266)
 add suspend/charger-wake changes. They are not GPU support and have not been
 qualified on J85.
+
+## Late public-source follow-up
+
+Orchard subsequently added
+[`221c822`](https://github.com/OrchardLinux/orchard/commit/221c8223f1dd3eb9e9d435c3c684eb701b5433c3),
+which rebases the wake-on-plug charger patch after the earlier USB-fallback
+change. The commit fixes a concrete integration failure: the patch series had
+stopped at the charger patch. It restores patch-series application past that
+patch; the commit's kernel check was skipped, so it is not evidence of a
+successful kernel build or that charging, suspend or wake has been qualified on
+J85.
+
+Our exact offline verification of the merged DWC2 patch found one separate
+source-quality issue: the new helper separated an existing kernel-doc block
+from the function it documents, producing a candidate-only `W=1` warning in
+the J85, generic 4 KiB and Apple 16 KiB focused builds. The source-order-only
+fix merged through [Orchard PR #88](https://github.com/OrchardLinux/orchard/pull/88)
+as
+[`49ba6d5`](https://github.com/OrchardLinux/orchard/commit/49ba6d56e76614252646baa970aef4d632e8985d).
+It leaves the USB behavior unchanged and is not a native J85 USB result.
+
+A newly active MIT-licensed
+[`mattonik/ipad-nixos`](https://github.com/mattonik/ipad-nixos) repository adds
+execution-disabled models for A8X/J81 GPU allocation views and address-space
+ownership. Its
+[`b6fb777`](https://github.com/mattonik/ipad-nixos/commit/b6fb7775a6e8cea5fdcbe2096b0d63f5695f4140)
+commit reports that a recovered J81 `sgx` device-tree node has no explicit
+IOMMU/DART binding and therefore refuses to invent a GPU aperture or stream.
+That is a useful review principle for J85: mapped, backing and device-visible
+addresses must be tied to a source-backed owner before firmware is started.
+It is not J85 evidence, and the private ADT artifact cited by that commit is
+not published in the repository, so its board-specific conclusion cannot be
+independently reproduced from the public tree. The J81 constants, allocation
+classes and mapper selectors are not inputs to the A7/J85 port.
+
+Later public commits in that repository narrow the J81 mapping path without
+closing it. [`2c2163f`](https://github.com/mattonik/ipad-nixos/commit/2c2163fdf592ee72a4eb7369d6289b2481ee3783)
+separates the CPU `IOMemoryDescriptor`/`IOMemoryMap` view from the accelerator's
+private mapping policy; [`bda4d79`](https://github.com/mattonik/ipad-nixos/commit/bda4d79987a9ae3a21465e45562f8ee1afc4b5b1)
+traces that policy through a provider-created map object; and
+[`5c08cf4`](https://github.com/mattonik/ipad-nixos/commit/5c08cf434a8fed04420c4ea78c714f61e86a4142)
+reports that the initializer records mapping metadata but does not calculate a
+device address, program DART, touch GPU MMIO or launch firmware. The useful
+transfer is therefore a four-part J85 admission boundary: CPU mapping,
+accelerator policy, device-visible address materialization and DART ownership
+must each have a source-backed receipt. The J81 selectors, addresses, page
+scale, firmware and mapping classes remain quarantined, and this does not
+establish any native J85 GPU progress.
+
+The focused J85 provider audit reaches the same conservative boundary from
+our own retained evidence. A safe START predicate needs exact target and owner
+identity, current mapping/power/reset/bridge receipts bound to one owner epoch,
+a same-boot live profile, and a source-backed control-bus observation. The
+last two are still absent. In particular, no retained source binds an SGX
+clock consumer to a route or selector, so a core-rate callback must remain
+unsupported rather than returning a catalog value or CPU-derived surrogate.
+This is a sharper refusal contract, not a successful clock/reset sequence,
+firmware-alive event or rendered frame.
+
+After the first review, the same J81 repository published an author-reported
+guarded Fender reset/hold/wake result in
+[`31c61bd`](https://github.com/mattonik/ipad-nixos/commit/31c61bdb76ac6b1af0129dfa287a17d52ccdc5aa).
+The report records reset-clear, hold-confirmation and bounded wake-poll
+readbacks and explicitly excludes direct RGX access, firmware and rendering.
+The log paths and hashes cited by that report are not present in the public
+tree, so the physical result is not independently reproducible from the
+repository. Later commits through
+[`efec6eb`](https://github.com/mattonik/ipad-nixos/commit/efec6eb0cb5375a42c7559d48b2bd131c2b28569)
+model post-loader, interrupt, GPC control-list and boot-descriptor stages with
+execution disabled.
+
+Only the sequencing discipline is transferable: one power owner, reset-clear
+poll, reset-state transition, held-state confirmation, setup, request and a
+bounded wake observation. J81 register addresses, values, allocation classes,
+firmware tables and hooks remain quarantined. This update does not close any
+of the four J85 physical provider callbacks or establish a J85 clock, reset,
+firmware-alive event, job or frame.
+
+## Later J81 clock-state and address-domain boundary
+
+The same MIT-licensed J81 repository subsequently published an
+author-reported, guarded hardware batch in
+[`c89e908`](https://github.com/mattonik/ipad-nixos/commit/c89e9085f10c4be0e3161ac932395c046f4d4ea2)
+and
+[`c1c7378`](https://github.com/mattonik/ipad-nixos/commit/c1c73789a8b5d15f3531dd458ddf083a2f77e720).
+It reports one PMGR transition from target/actual state 0 to 15, followed by a
+GPC state read of zero. Its gate then stopped before the GPC control and GPU
+identity registers. That is useful fail-closed evidence on J81, but the cited
+append-only device logs are private and the result is neither independently
+reproducible from the public tree nor a J85 observation.
+
+The accompanying offline series through
+[`640dda8`](https://github.com/mattonik/ipad-nixos/commit/640dda8ff4412809c6cf70139b5a9452fbe0a54a)
+models an Apple `device-clocks` record and argues that the existing Linux PMGR
+power-domain driver has no equivalent parser, clock-provider registration,
+bridge-selector handling or provider busy-count action. Later commits through
+[`e2f9d67`](https://github.com/mattonik/ipad-nixos/commit/e2f9d6796f7128e4827a0b6692da96bafabdb86e)
+separate the GPU core MMIO window, auxiliary resource mappings, a special META
+bootloader slot and ordinary firmware-data address domains. Those conclusions
+are based partly on unpublished J81 inputs and A9/G5P cross-checks, so their
+record bytes, selectors, addresses and segment layout remain quarantined.
+
+The transferable result is another contract boundary, not an implementation:
+power-domain success does not prove that the platform clock-state action ran,
+and a CPU or physical address does not prove firmware-visible ownership. A
+future J85 START receipt must therefore bind the clock-state provider action,
+reset epoch, core MMIO owner, firmware-resource mappings and device-visible
+address materialization to the same guarded owner interval. The current J85
+observer remains read-only and does not satisfy those later gates.
+
+## 9 November public delta: boot state, performance state and job ownership
+
+Three later public changes sharpen the J85 plan without supplying a J85 GPU
+implementation.
+
+First, the J81/A8X investigation now separates three things that earlier notes
+could too easily conflate. Its
+[`d838f13`](https://github.com/mattonik/ipad-nixos/commit/d838f131ad1d97f70e27e9d8086dc33cffd06854)
+commit traces a GPC performance-state setter/getter and a separate boot-time
+rate-calculation path. The report explicitly does not connect the observed GPC
+state value to a row in the GFX performance table or to a physical core rate.
+Its bounded selector-table scan found no direct use of the page-5 calculated
+slot in the inspected records. A same-boot
+[`bb1f70d`](https://github.com/mattonik/ipad-nixos/commit/bb1f70d45b87d198f1f9a3fd1fbb3a55628c5ef6)
+capture also reports the sampled GFX performance-table words unchanged across
+one guarded power transition. These are author-reported J81 results, partly
+dependent on unpublished local artifacts, not J85 observations. The
+transferable conclusion is narrower: a power-domain acknowledgement, GPC state
+readback and populated performance table are distinct receipts. A future J85
+provider must not infer an active OPP row or physical clock from any one of
+them.
+
+Second, Orchard's A10/J71b driver added
+[`de8f6a0`](https://github.com/OrchardLinux/orchard/commit/de8f6a0feb0aded5dada13effb921dad72a6654a),
+which gives render jobs separate command areas, advances the scheduling entry
+per command and derives fragment retirement from the firmware-written stamp.
+The author reports this prevents later jobs from overwriting data the firmware
+still rereads at retirement. This is a useful future J85 lifetime rule: command
+storage, scheduling identity and retirement evidence must remain job-specific.
+It applies only after compatible firmware communication and submission exist;
+it does not provide the A7 clock/reset provider, firmware ABI or first safe
+core access.
+
+Third, Project Cascadia reports a real A5/P105 Linux boot from NAND through
+kloader and iBEC in
+[`862f6d4`](https://github.com/rzxvx/Project-Cascadia/commit/862f6d4739c0303475f47c1b9f433909e5479ca3),
+followed by a conditional USB-PHY recovery in
+[`bb1ed0e`](https://github.com/rzxvx/Project-Cascadia/commit/bb1ed0e84091f418e532d6a721b80a1927cfd6fa).
+Its reported PC-less path left three board-specific PMGR states and the OTG PHY
+off; the driver restores that board's known DFU state only when the PHY is
+observed off. This is useful installation methodology: compare boot-path state,
+move the minimum recovery into the owning driver and keep the USB-boot path a
+no-op. P105 addresses, values, boot images, NAND layout and 32-bit A5 chain are
+not J85 inputs. The report does not establish J85 internal storage, an
+untethered A7 boot or replacement of Apple's first-stage logo.
+
+The resulting J85 action remains unchanged at the hardware boundary: identify
+the A7 provider that owns the selected performance state and physical rate,
+bind it to the same reset and mapping epoch, and only then attempt firmware
+startup. These public changes justify documentation and test-plan updates, not
+an Orchard feature claim or a J85 driver PR.
+
+## 10 November public delta: installed systems and cross-OS timing
+
+Orchard now ships an A10 GPU-firmware extraction recipe and counts the T8010
+G9P core as supported in
+[`68d5775`](https://github.com/OrchardLinux/orchard/commit/68d57755a4c6705593a566d74ba1bb44884554ac).
+Its Omarchy layer installs the matching Vulkan driver and discovers the GPU at
+login in
+[`4729fe3`](https://github.com/OrchardLinux/omarchy-a/commit/4729fe3f4a715b6f1f06294d1d85e5236a31a237).
+This is author-reported A10 behavior on J71b/J171/J172. The reusable integration
+pattern is a hash-pinned firmware recipe plus session-time capability
+discovery; the A10 image, extractor, BVNC and driver support level are not A7
+inputs and do not establish J85 firmware compatibility or rendering.
+
+The J81/A8X investigation also published a same-boot timing observation in
+[`db9422d`](https://github.com/mattonik/ipad-nixos/commit/db9422d2d29642624bf8163d03db519b38405f03).
+Its guarded report records PMGR page-5 offset `+4` as zero before the GPC and
+identity sequence and bit 30 set after the identity hook, while GPU firmware
+later booted. A Linux sample remained zero after a GFX/GPC-only sequence. The
+author explicitly does not identify the operation that changes the bit, its
+meaning, its writability or a causal role in the Linux stall. These are J81
+addresses and observations; they justify a timing-focused J85 observation
+plan, not replaying the bit or importing the address.
+
+Two installation changes clarify the native-storage boundary. Orchard now
+selects only NVMe namespace 1 for its 64-bit direct installer in
+[`73668e6`](https://github.com/OrchardLinux/orchard/commit/73668e68f68586a1700eac039fbebabeb824a4fe)
+and reports whether an error happened before or after its first write in
+[`e46f9e8`](https://github.com/OrchardLinux/orchard/commit/e46f9e845c3a851a04b0500b4664315c45d4e593).
+The same installer still expects an `applesftl` block device on 32-bit boards;
+it does not create the missing J85 ANS1/ASP storage path.
+
+Project Cascadia's open
+[`A5 K93 bring-up PR`](https://github.com/rzxvx/Project-Cascadia/pull/40)
+reports a persistent Linux overlay on a validated middle band of raw NAND,
+with iOS retained and a PC-less launch from jailbroken iOS. Its GPL-2.0 source
+and hardware report provide useful safety methodology: revalidate ownership on
+every start, keep a register-level write allowlist, acknowledge writes only
+after media completion and preserve a RAM-only fallback. K93 uses the A5 raw
+NAND/VSVFL/YAFTL stack and its own board geometry; J85 uses a different
+ANS1/ASP controller path. None of its block numbers, commands, firmware or
+write permissions are transferable, and the open PR does not establish a J85
+storage device or native install.
+
+The next honest J85 milestones therefore remain separate: first expose and
+validate a read-only internal block device, then prove bounded persistence and
+recovery, and independently complete the exact A7 clock/reset/firmware path
+before claiming GPU acceleration. An A10 desktop, J81 timing sample or A5
+persistent installation is supporting methodology, not J85 completion.
+
+## 17 November J85 RAM-only GPU diagnostic
+
+An attended iPad mini 2 Wi-Fi (J85/A7) test advanced one step beyond the
+earlier Fender START timeout. The diagnostic used a fresh DFU-to-PongoOS RAM
+boot, a same-session capture of the J85 power and bridge properties, and one
+manually triggered request on a matching Linux RAM image. The image made no
+automatic GPU request and wrote nothing to internal storage. The USB serial
+shell remained responsive afterward.
+
+The J85 power-domain target and actual states agreed, and all 33 guarded
+bridge-write callbacks returned. Fender START then completed after three writes and
+six status reads; its busy indication cleared within the bounded observation.
+The previous J85 attempt had stopped with the busy indication still set after
+61 reads. The new limit was larger, but this completion took fewer reads than
+the old limit, so the limit increase alone does not explain the difference.
+Boot state, timing and register behavior remain open questions. The physical
+clock-rate/reset provider is still unqualified; this test used an explicit
+boot-retained-state assumption.
+
+The worker next completed two raw reads from distinct core offsets. Both
+returned the same word, which also matched a Fender status word observed on a
+previous boot. That cross-window repetition makes address decoding or stale
+bus data a live concern. The terminal receipt records the raw samples and a
+parked, cold-reboot-required state; it does **not** establish a GPU identity,
+BVNC, valid core registers, firmware startup, a GPU job, a rendered frame or
+desktop acceleration. No second hardware request was made in that boot.
+
+### Second fresh boot: history5
+
+A separate attended J85 DFU-to-PongoOS boot loaded the next matching Linux
+image in RAM, with no internal-storage write. Its new software address-metadata
+check passed: the claimed core and Fender ranges, mappings and read offsets
+were distinct and ordered. This checks the software description only; it does
+not validate physical address decoding or a live GPU core.
+
+The power-domain target and actual states again agreed under the existing
+boot-retained-state assumption, and all 33 bridge-write callbacks returned.
+This time Fender START did **not** complete: three writes and 253 status reads
+exhausted its local 256-operation budget while the busy indication remained
+set. No core read was attempted. The request ended in a retained state that
+requires a fresh RAM boot before another GPU test. It did not start firmware,
+submit a GPU job, render a frame or establish acceleration.
+
+History4's six-read START completion therefore did not reproduce on history5,
+despite the same bounded Fender path and matching captured power and bridge
+properties. The cause of the run-to-run variation remains unknown. The exact
+history4-image replay below tests whether its earlier completion repeats;
+core address decoding and the ambiguous history4 raw samples still need
+independent validation before any identity claim. Full native transcripts and
+firmware, calibration, identifiers and reusable board settings remain private.
+The selected raw status words below are shared only as uninterpreted observations.
+
+### Third fresh boot: exact history4-image replay
+
+An attended J85 test used a new DFU-to-PongoOS run, a fresh same-session
+capture and a separately admitted RAM boot of the unchanged history4 image.
+The newly captured power and bridge property bytes matched the earlier run,
+so the assembled image bytes also matched. The new Linux boot had a distinct
+boot identity, matching live properties, an idle GPU worker and no automatic
+GPU request. One manually admitted request was made; no internal storage was
+written.
+
+The power-domain target and actual states agreed under the same
+boot-retained-state assumption, and all 33 bridge-write callbacks returned.
+Fender START again did **not** complete: three writes and 253 status reads
+exhausted the local 256-operation budget while the busy indication remained
+set. No core read, firmware start, GPU job or rendered frame followed. The
+worker retained state that requires a new RAM boot before another request.
+
+The earlier six-read history4 completion is therefore not reliably
+repeatable even with the same image and captured property bytes. History5's
+added software address-metadata check is not required for this failure. These
+boots do not identify the cause: timing, retained power or reset state,
+hardware acceptance of bridge writes, and address decoding still need
+separate evidence. The fourth fresh boot below collected a bounded trace of
+the status reads already performed. No accelerated rendering is claimed.
+
+### Fourth fresh boot: passive Fender status trace
+
+A fresh, separately admitted J85 RAM boot ran the matching passive-trace
+kernel. A same-session capture supplied the power and bridge properties,
+which matched the earlier captures. One manual GPU request completed over
+the USB console, and the kernel returned a full status trace. No internal
+storage was written.
+
+The 33 guarded bridge callbacks returned. Fender START still did not
+complete. Its three writes and 253 status reads exhausted the same
+256-operation limit, with the busy indication set in every completed read.
+The driver made no core read. It started no GPU firmware or job and rendered
+no frame.
+
+The first five reads returned `0x00000011`. The sixth returned
+`0xbed1c738`, followed by `0xbed1f77a` and `0xbed3f77a` on reads seven
+and eight. The last value appeared in 232 of the 253 reads. The trace
+recorded 27 transitions between adjacent status words. The dominant word
+equals both raw, uninterpreted core samples from the first history4 boot.
+The source uses distinct mapped ranges and direct MMIO read callbacks. The
+physical address decode and meaning of the returned word remain unverified.
+
+The one history4 run that cleared busy began its request about four minutes
+and 26 seconds after its RAM boot. The three later failures began about two
+minutes and 52 seconds to three minutes and 25 seconds after boot. Those
+four observations motivated the delayed replay below, without establishing
+that elapsed time caused the different outcomes. An address/bus-response
+audit remains necessary. The trace kernel left the tested boot in a
+cold-restart-required state.
+
+### Fifth fresh boot: six-minute Fender replay
+
+An attended J85 test repeated the passive Fender status trace on a fresh,
+separately admitted RAM boot with matching captured power and bridge
+properties. One GPU request began at 19:54:35.621751 UTC, 6m11.690s after
+the 19:48:23.931933 UTC RAM `bootm`. The USB console returned the complete
+bounded trace. No internal storage was written.
+
+Fender START again returned `-7` after three writes and 253 reads. Busy bit
+4 remained high in every read. The first five status words were `0x11`, the
+sixth changed transiently, and the dominant later word again matched the
+uninterpreted raw samples described in the [fourth-boot trace](#fourth-fresh-boot-passive-fender-status-trace).
+This replay recorded 40 adjacent-word transitions, compared with 27 in that
+earlier trace. It produced no core read, GPU identity, firmware job or frame.
+
+Waiting over six minutes therefore weakens a simple boot-age-only account of
+history4's one six-read START completion. It does not determine why busy
+remains set: register aliasing, bus response, power/reset state and other
+timing relationships remain hypotheses. The driver retained state requiring
+a cold reboot before another request. Full native transcripts and board-specific
+settings remain private; the selected raw status words above are not decoded.
+
+### Sixth fresh boot: passive PMGR trace on J85
+
+An attended J85 RAM boot used a fresh PongoOS capture, the matching v5 kernel,
+and one manually admitted GPU request. Eight read-only Linux preflight
+commands completed successfully, including the kernel, boot identity,
+captured-property and idle-worker checks. The v5 instrumentation summarizes
+PMGR words returned by checks already in the driver; it adds no MMIO reads or
+new clock or reset action. No internal storage was written.
+
+The PMGR confirmations completed and remained stable across ten samples.
+The driver's Fender START **completion predicate** returned zero after three
+writes and six status reads when its busy indication cleared. The terminal
+status did not establish the requested ON state, so physical GPU power-on
+remains unverified. Two bounded core-range reads then completed, but they
+returned the same raw word also observed in prior Fender status reads. The
+word's register meaning and physical address decode remain unverified, so
+this is **not** a GPU identity or BVNC claim.
+The retained worker requires a cold RAM restart before another GPU request.
+
+The two preceding v4 tests had exhausted the 256-operation limit while
+Fender START stayed busy. This one v5 run shows the driver's completion
+predicate can return zero again, but it does not establish repeatability or
+explain the difference.
+The passive logging change cannot be credited as the cause. Power, clock,
+reset and address-response behavior still need separate evidence. No GPU
+firmware boot, job, triangle, frame or acceleration was demonstrated.
+The full private transcript, firmware, calibration and identifiers are not
+published here.
+
+### Seventh and eighth fresh boots: bounded status and midpoint power sample
+
+Two more attended J85 tests used separate, fresh DFU-to-PongoOS captures and
+Linux RAM boots. Each passed a read-only idle preflight and made exactly one
+manual GPU request. No internal storage was written. Both bounded Fender
+START attempts made three writes and 64 spaced status reads over about 68 ms.
+The driver's busy predicate remained set on every read, so START stopped at
+its diagnostic limit. Neither run attempted a GPU core read.
+
+In the first run, eight PMGR confirmations remained stable, but all preceded
+Fender START. The second run added one PMGR provider read immediately after
+completed Fender status read 32, inside the same guarded request. That read
+completed and matched the pre-START power-state word, with target and actual
+states both reported active. It establishes an acknowledged outer power-state
+sample at that point in the poll loop. It does not establish a running GPU core
+clock, released reset, valid downstream bus response, or continued power state
+between observations.
+
+Both requests ended in retained, fresh-boot-required states. The cause of the
+START failure and its variation across earlier boots remains unresolved. No
+GPU identity, firmware startup, submitted job, rendered frame or acceleration
+is claimed. Full transcripts and device-specific inputs remain private.
