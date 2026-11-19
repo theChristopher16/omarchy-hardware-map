@@ -462,8 +462,8 @@ properties. The cause of the run-to-run variation remains unknown. The exact
 history4-image replay below tests whether its earlier completion repeats;
 core address decoding and the ambiguous history4 raw samples still need
 independent validation before any identity claim. Full native transcripts and
-device-specific values remain private; no firmware, calibration, identifiers
-or reusable board settings are published here.
+firmware, calibration, identifiers and reusable board settings remain private.
+The selected raw status words below are shared only as uninterpreted observations.
 
 ### Third fresh boot: exact history4-image replay
 
@@ -539,8 +539,8 @@ Waiting over six minutes therefore weakens a simple boot-age-only account of
 history4's one six-read START completion. It does not determine why busy
 remains set: register aliasing, bus response, power/reset state and other
 timing relationships remain hypotheses. The driver retained state requiring
-a cold reboot before another request. Native transcripts and device-specific
-values remain private.
+a cold reboot before another request. Full native transcripts and board-specific
+settings remain private; the selected raw status words above are not decoded.
 
 ### Sixth fresh boot: passive PMGR trace on J85
 
@@ -568,4 +568,28 @@ explain the difference.
 The passive logging change cannot be credited as the cause. Power, clock,
 reset and address-response behavior still need separate evidence. No GPU
 firmware boot, job, triangle, frame or acceleration was demonstrated.
-The private transcript and board-specific values are not published here.
+The full private transcript, firmware, calibration and identifiers are not
+published here.
+
+### Seventh and eighth fresh boots: bounded status and midpoint power sample
+
+Two more attended J85 tests used separate, fresh DFU-to-PongoOS captures and
+Linux RAM boots. Each passed a read-only idle preflight and made exactly one
+manual GPU request. No internal storage was written. Both bounded Fender
+START attempts made three writes and 64 spaced status reads over about 68 ms.
+The driver's busy predicate remained set on every read, so START stopped at
+its diagnostic limit. Neither run attempted a GPU core read.
+
+In the first run, eight PMGR confirmations remained stable, but all preceded
+Fender START. The second run added one PMGR provider read immediately after
+completed Fender status read 32, inside the same guarded request. That read
+completed and matched the pre-START power-state word, with target and actual
+states both reported active. It establishes an acknowledged outer power-state
+sample at that point in the poll loop. It does not establish a running GPU core
+clock, released reset, valid downstream bus response, or continued power state
+between observations.
+
+Both requests ended in retained, fresh-boot-required states. The cause of the
+START failure and its variation across earlier boots remains unresolved. No
+GPU identity, firmware startup, submitted job, rendered frame or acceleration
+is claimed. Full transcripts and device-specific inputs remain private.
